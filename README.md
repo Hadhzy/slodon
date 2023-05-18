@@ -4,29 +4,35 @@
     Ai stuff...
 </p>
 
+<a href="https://github.com/FlurryGlo/slodon/stargazers">![GitHub Repo stars](https://img.shields.io/github/stars/FlurryGLo/slodon?style=social)</a>
+
 # Table of Contents:
 
-## 1. [Motivation](#motivation)
-## 2. [How to be part of the project](#how-to-be-part-of-the-project)
-## 3. [Monetization plan](#monetization-plan)
-## 4. [Sources](#sources)
+ - [Motivation](#motivation)
+ - [How to be part of the project](#how-to-be-part-of-the-project)
+ - [Monetization plan](#monetization-plan)
+ - [Sources](#sources)
 
+---
 ## Motivation:
 
 The reason for embarking on this project is pretty simple, actually. In the midst of all these "AI revolutions," I've got this strong urge to bring together a bunch of talented folks who share the same mindset. We can join forces and create something seriously awesome in the open source world.
 
 You know, I think making some money out of it is a great idea. It's a real motivator for people, and it can help keep the projects running smoothly and reach their goals. (Take a look at the monetization plan for more info.)
 
+---
 ## How to be part of the project:
 
 You've got two choices here: you can either do your own thing and  [develop independently](https://github.com/FlurryGlo/slodon/blob/main/CONTRIBUTING.md), or you can jump on board with the [core developer team](https://github.com/FlurryGlo/slodon/blob/main/etc/core_developer.md). Just a heads up, the [monetization plan](https://github.com/FlurryGlo/slodon/blob/main/etc/Monetization_plan.md)`only applies to those who are part of the core developer crew`. We appreciate any and all development efforts.
 
 If you're curious about `becoming a core developer` and want more details, `check out this  page`: [becoming-core-developer](https://github.com/FlurryGlo/slodon/blob/main/etc/core_developer.md).
 
+---
 ## Monetization plan:
 
 For more information: [monetization plan](https://github.com/FlurryGlo/slodon/blob/main/etc/Monetization_plan.md)
 
+---
 ## Why this project is not good for you:
 
 This project is `not good` for you if:
@@ -38,6 +44,7 @@ This project is `not good` for you if:
 
 - if you prefer `dedicating your time solely to the development of games and restaurant websites`, without a strong inclination toward groundbreaking ventures, this project may not be the right fit for 
 
+---
 ## Technical information:
 
 
@@ -49,12 +56,16 @@ As the project progresses, it is highly likely that we will require more advance
 
 The technology stack for this project includes:
 
+---
 [Python](https://www.python.org/) (version 3.11-3.12)
 
 [Poetry](https://python-poetry.org/) (for dependency management)
 
+
 TBD (`front-end framework, to be determined`)
 These components will serve as the foundation for our development process.
+
+---
 
 ###### "Actually it is not so technical so far..."
 
