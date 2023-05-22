@@ -70,7 +70,7 @@ These components will serve as the foundation for our development process.
 ###### "Actually it is not so technical so far..."
 
 ###  Sources:
-- [core_developer]()
-- [developing]()
-- [monetization_plan]()
-- [contributing]()
+- [core_developer](https://github.com/FlurryGlo/slodon/blob/main/etc/core_developer.md)
+- [developing](https://github.com/FlurryGlo/slodon/blob/main/etc/developing.md)
+- [monetization_plan](https://github.com/FlurryGlo/slodon/blob/main/etc/Monetization_plan.md)
+- [contributing](https://github.com/FlurryGlo/slodon/blob/main/CONTRIBUTING.md)
