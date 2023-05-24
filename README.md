@@ -5,7 +5,6 @@
 </p>
 
 <a href="https://github.com/FlurryGlo/slodon/stargazers">![GitHub Repo stars](https://img.shields.io/github/stars/FlurryGLo/slodon?style=social)</a>
-
 # Table of Contents:
 
  - [Motivation](#motivation)
