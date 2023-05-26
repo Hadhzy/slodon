@@ -2,31 +2,47 @@ from __future__ import annotations
 # Define the API system
 
 # Mainly adopted from: https://github.com/FlurryGlo/slobypy/blob/main/slobypy/rpc.py
-
+# Further reading about this system: "miro_link_here"
 import asyncio
-from typing import Any, Awaitable, Callable, Coroutine
-
-import websockets.exceptions
+from typing import Any, Awaitable, Callable
+import uuid
 
 from websockets.legacy.server import WebSocketServerProtocol
 from websockets.server import WebSocketServer, serve
 
 # This project
-from slodon.test.api import task1, task2
+from slodon.api.test.api import task1, task2
+from slodon.api.utils.uri import URI
 __all__: tuple[str, ...] = (
     "RPC",
 )
 
 
 class RPC:
+    """
+    Websocket server
+    """
     CURRENT_VERSION = "0.A1"
 
     def __init__(self, host: str = "localhost", port: int = 8765) -> None:
+        """
+        Websocket initialization
+
+        ### Arguments
+        - host (str): The host to connect to
+        - port (int): The port to connect to
+
+        ### Returns
+        - None
+        """
+        self._id = uuid.uuid4()  # generate a random id
+
         self.event_loop = asyncio.get_event_loop()  # get the event loop
         asyncio.set_event_loop(self.event_loop)  # set the event loop
-
+        _api = None  # api wrapper object
         self.ws: WebSocketServer | None = None
         self.tasks = [task1, task2]  # represents the tasks
+
         asyncio.run(self.run(host, port))
 
     async def run(self, host: str, port: int):
@@ -38,12 +54,21 @@ class RPC:
         pending = asyncio.all_tasks()
         self.event_loop.run_until_complete(asyncio.gather(*pending))
 
-    async def _handle_ws(self, conn: WebSocketServerProtocol) -> None:
+    async def _handle_ws(self, conn: WebSocketServerProtocol, path: str) -> None:
         """
-        Used to handle messages from the websocket connection(client)
-        :param conn:
-        :return: NOne
+        Handles the websocket connection and sends a response to the client
+
+        ### Arguments
+        - conn (WebsocketServerProtocol): The websocket connection
+        - path (str): corresponding uri(endpoint)
+
+
+        ### Returns
+            - None
         """
+        _uri = URI(path).uri  # make a wrapper around the path
+
+        await conn.send(path)  # send something back to the client
 
     async def create_ws(self, ws_handler: [[Callable], Awaitable[Any]], host: str, port: int) -> None:
         """
@@ -56,11 +81,6 @@ class RPC:
 
         ### Returns
         - None
-
-        :param ws_handler:
-        :param host:
-        :param port:
-        :return:
         """
 
         self.ws = await serve(ws_handler, host, port)
