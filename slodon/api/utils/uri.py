@@ -1,8 +1,12 @@
 import uuid
+import json as _json
+__all__ = ["URI"]
 
 
 class _UriBase:
     """Represent the URI"""
+    __slots__ = ["id", "uri"]
+
     def __init__(self, uri):
         self.id = uuid.uuid4()
         self.uri = uri
@@ -21,9 +25,9 @@ class _UriBase:
         """
         return self.__repr__()
 
-
-class Watcher:
-    """Serve the websocket connection by sending a response to the client"""
+    def __eq__(self, other) -> bool:
+        """Compare them by their uri"""
+        return self.uri == other.uri
 
 
 class URI(_UriBase):
