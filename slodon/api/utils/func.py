@@ -19,6 +19,7 @@ def res_notation(notion: str) -> JSON:
     ### Returns
     - JSON
     """
+    print("LANGUAGE VALUE", LANGUAGE)
     _language = LANGUAGE or "en"  # hard coded for now
     base = "locales/" + _language
     _not_list = notion.split(".")

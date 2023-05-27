@@ -81,7 +81,6 @@ class RPC:
         """
         _language = uri.uri.split("/")[1]  # get the language
         slodon.api.utils.func.LANGUAGE = _language  # set the language
-        uri.formate()  # remove the language tag from the uri
         return json.dumps(RESPONSES.get(uri.formate()))
 
     async def _handle_ws(self, conn: WebSocketServerProtocol, path: str) -> None:
