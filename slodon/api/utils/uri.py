@@ -25,6 +25,11 @@ class _UriBase:
         """
         return self.__repr__()
 
+    def formate(self) -> str:
+        # remove the language from the uri(/en etc.)
+        _language_uri = self.uri.split("/")[1]  # the language tag in the url
+        return self.uri.replace(f"/{_language_uri}", "")
+
     def __eq__(self, other) -> bool:
         """Compare them by their uri"""
         return self.uri == other.uri

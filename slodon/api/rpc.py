@@ -10,11 +10,13 @@ import json
 from websockets.legacy.server import WebSocketServerProtocol
 import websockets.server
 
+import slodon.api.utils.func
 # This project
 from slodon.api.test.api import task1, task2
 from slodon.api.utils.uri import URI
 from slodon.api.utils.types import JSON
 from slodon.api.utils.static import RESPONSES
+import slodon.api.utils.func
 
 __all__: tuple[str, ...] = (
     "RPC",
@@ -44,7 +46,6 @@ class RPC:
         asyncio.set_event_loop(self.event_loop)  # set the event loop
         self._ws: websockets.server.WebSocketServer | None = None
         self.tasks = [task1, task2]  # represents the tasks
-        print("here1")
         asyncio.run(self.run(host, port))
 
     async def run(self, host: str, port: int) -> None:
@@ -67,7 +68,7 @@ class RPC:
         self.event_loop.run_until_complete(asyncio.gather(*pending))
 
     # noinspection PyMethodMayBeStatic
-    def serve_content(self, uri) -> JSON:
+    def serve_content(self, uri: URI) -> JSON:
         """
         Runs the websocket server
 
@@ -78,7 +79,10 @@ class RPC:
         ### Returns
         - None
         """
-        return json.dumps(RESPONSES.get(uri))
+        _language = uri.uri.split("/")[1]  # get the language
+        slodon.api.utils.func.LANGUAGE = _language  # set the language
+        uri.formate()  # remove the language tag from the uri
+        return json.dumps(RESPONSES.get(uri.formate()))
 
     async def _handle_ws(self, conn: WebSocketServerProtocol, path: str) -> None:
         """
@@ -92,7 +96,7 @@ class RPC:
         ### Returns
             - None
         """
-        _uri = URI(path).uri  # make a wrapper around the path
+        _uri = URI(path)  # make a wrapper around the path
         await conn.send(self.serve_content(_uri))  # send the response to the client
 
     async def create_ws(self,
