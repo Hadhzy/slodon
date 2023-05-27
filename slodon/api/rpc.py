@@ -42,15 +42,24 @@ class RPC:
 
         self.event_loop = asyncio.get_event_loop()  # get the event loop
         asyncio.set_event_loop(self.event_loop)  # set the event loop
-        self.ws: websockets.server.WebSocketServer | None = None
+        self._ws: websockets.server.WebSocketServer | None = None
         self.tasks = [task1, task2]  # represents the tasks
         print("here1")
         asyncio.run(self.run(host, port))
 
-    async def run(self, host: str, port: int):
+    async def run(self, host: str, port: int) -> None:
+        """
+        Runs the websocket server
 
+        ### Arguments
+        - host (str): The host to connect to
+        - port (int): The port to connect to
+
+        ### Returns
+        - None
+        """
         await asyncio.gather(
-            task1(), self.create_ws(self._handle_ws, host, port)
+            self.create_ws(self._handle_ws, host, port)
         )
 
         pending = asyncio.all_tasks()
@@ -59,6 +68,16 @@ class RPC:
 
     # noinspection PyMethodMayBeStatic
     def serve_content(self, uri) -> JSON:
+        """
+        Runs the websocket server
+
+        ### Arguments
+        - host (str): The host to connect to
+        - port (int): The port to connect to
+
+        ### Returns
+        - None
+        """
         return json.dumps(RESPONSES.get(uri))
 
     async def _handle_ws(self, conn: WebSocketServerProtocol, path: str) -> None:
@@ -74,9 +93,12 @@ class RPC:
             - None
         """
         _uri = URI(path).uri  # make a wrapper around the path
-        await conn.send(self.serve_content(_uri))  # send something back to the client based on the endpoint(_uri)
+        await conn.send(self.serve_content(_uri))  # send the response to the client
 
-    async def create_ws(self, ws_handler: [[Callable], Awaitable[Any]], host: str, port: int) -> None:
+    async def create_ws(self,
+                        ws_handler: [[Callable], Awaitable[Any]],
+                        host: str,
+                        port: int) -> None:
         """
         Creates a websocket connection to the React frontend
 
@@ -89,8 +111,8 @@ class RPC:
         - None
         """
 
-        self.ws = await websockets.server.serve(ws_handler, host, port)
-        await self.ws.serve_forever()
+        self._ws = await websockets.server.serve(ws_handler, host, port)
+        await self._ws.serve_forever()
 
 
 if __name__ == '__main__':
@@ -98,4 +120,6 @@ if __name__ == '__main__':
 
 
 class Event:
-    pass
+    """
+    Represents an event coming from the client(model)
+    """

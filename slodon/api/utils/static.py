@@ -1,5 +1,5 @@
 # Represent endpoints and their corresponding json objects
-# NOTION -> file_name.object WITHOUT the extension E.G -> .json
+# NOTATION -> file_name.object WITHOUT the extension E.G -> .json
 
 from typing import Dict
 
@@ -8,6 +8,5 @@ from slodon.api.utils.func import res_notation
 
 from slodon.api.utils.types import JSON
 
-RESPONSES: Dict[str, JSON] = {"/test1": res_notation("en.test")}
-
+RESPONSES: Dict[str, JSON] = {"/test1": res_notation("en")}
 
