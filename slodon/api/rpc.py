@@ -16,7 +16,8 @@ import slodon.api.utils.func
 # This project
 from slodon.api.test.api import task1, task2
 from slodon.api.utils.uri import URI
-from slodon.api.utils.types import JSON
+from slodon.api.utils.types import JSON, Response
+
 
 __all__: tuple[str, ...] = (
     "RPC",
@@ -94,7 +95,6 @@ class RPC:
         - conn (WebsocketServerProtocol): The websocket connection
         - path (str): corresponding uri(endpoint)
 
-
         ### Returns
             - None
         """
@@ -102,7 +102,7 @@ class RPC:
         content = self.serve_content(_uri)  # get the content
         status = HTTPStatus.OK if content != "null" else HTTPStatus.NOT_FOUND  # set the status to OK
 
-        response = {
+        response: Response = {
             'status': status,  # http status code
             'message': status.phrase,  # http status message
             'content': content  # actual content

@@ -2,3 +2,7 @@ The slodon API is developed using `Python websockets` and utilizes the fundament
 
 
 The API documentation containing all registered endpoints can be accessed [here](https://github.com/FlurryGlo/slodon/blob/main/slodon/api/utils/static.py).
+
+#### API documentation:
+  - TBD
+  - TBD
