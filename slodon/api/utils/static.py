@@ -4,9 +4,9 @@
 from typing import Dict
 
 # this project
-from slodon.api.utils.func import res_notation
+import slodon.api.utils.func as func
 
 from slodon.api.utils.types import JSON
 
-RESPONSES: Dict[str, JSON] = {"/test1": res_notation("en")}
+RESPONSES: Dict[str, JSON] = {"/test1": func.res_notation("en")}
 

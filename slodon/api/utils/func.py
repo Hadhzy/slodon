@@ -1,3 +1,4 @@
+# pylint: disable=missing-module-docstring
 # Helper functions for the API
 
 from pathlib import Path
@@ -19,13 +20,12 @@ def res_notation(notion: str) -> JSON:
     ### Returns
     - JSON
     """
-    print("LANGUAGE VALUE", LANGUAGE)
     _language = LANGUAGE or "en"  # hard coded for now
     base = "locales/" + _language
     _not_list = notion.split(".")
     _parent = Path(__file__).parent.absolute()
     _file = Path(_not_list[0])
-    with open(f"{_parent}/{base}/{_file}.json", "r") as f:
+    with open(f"{_parent}/{base}/{_file}.json", "r", encoding="utf-8") as f:  # pylint: disable=invalid-name
         _json = json.load(f)
 
     keys = _not_list[1:]
@@ -35,7 +35,3 @@ def res_notation(notion: str) -> JSON:
         if result is None:
             return None
     return result
-
-
-
-

@@ -1,5 +1,6 @@
-from __future__ import annotations
+# pylint: disable=missing-module-docstring
 # Define the API system
+from __future__ import annotations
 
 # Mainly adopted from: https://github.com/FlurryGlo/slobypy/blob/main/slobypy/rpc.py
 # Further reading about this system: "miro_link_here"
@@ -15,8 +16,6 @@ import slodon.api.utils.func
 from slodon.api.test.api import task1, task2
 from slodon.api.utils.uri import URI
 from slodon.api.utils.types import JSON
-from slodon.api.utils.static import RESPONSES
-import slodon.api.utils.func
 
 __all__: tuple[str, ...] = (
     "RPC",
@@ -81,6 +80,9 @@ class RPC:
         """
         _language = uri.uri.split("/")[1]  # get the language
         slodon.api.utils.func.LANGUAGE = _language  # set the language
+
+        from slodon.api.utils.static import RESPONSES   # pylint: disable=import-outside-toplevel
+
         return json.dumps(RESPONSES.get(uri.formate()))
 
     async def _handle_ws(self, conn: WebSocketServerProtocol, path: str) -> None:
@@ -122,7 +124,7 @@ if __name__ == '__main__':
     RPC()
 
 
-class Event:
+class Event:  # pylint: disable=too-few-public-methods
     """
     Represents an event coming from the client(model)
     """
