@@ -120,11 +120,11 @@ class RPC:
         await self._ws.serve_forever()
 
 
-if __name__ == '__main__':
-    RPC()
-
-
 class Event:  # pylint: disable=too-few-public-methods
     """
     Represents an event coming from the client(model)
     """
+
+
+if __name__ == '__main__':
+    RPC()
