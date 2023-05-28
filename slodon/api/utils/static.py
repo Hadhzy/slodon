@@ -1,5 +1,6 @@
 # Represent endpoints and their corresponding json objects
 # NOTATION -> file_name.object WITHOUT the extension E.G -> .json
+# !NOTE: the URL should contain the language as the first part of the path
 
 from typing import Dict
 

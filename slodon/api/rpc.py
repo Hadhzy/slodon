@@ -5,6 +5,7 @@ from __future__ import annotations
 # Mainly adopted from: https://github.com/FlurryGlo/slobypy/blob/main/slobypy/rpc.py
 # Further reading about this system: "miro_link_here"
 import asyncio
+from http import HTTPStatus
 from typing import Any, Awaitable, Callable
 import uuid
 import json
@@ -98,7 +99,16 @@ class RPC:
             - None
         """
         _uri = URI(path)  # make a wrapper around the path
-        await conn.send(self.serve_content(_uri))  # send the response to the client
+        content = self.serve_content(_uri)  # get the content
+        status = HTTPStatus.OK if content != "null" else HTTPStatus.NOT_FOUND  # set the status to OK
+
+        response = {
+            'status': status,  # http status code
+            'message': status.phrase,  # http status message
+            'content': content  # actual content
+        }
+
+        await conn.send(json.dumps(response))  # send the response to the client
 
     async def create_ws(self,
                         ws_handler: [[Callable], Awaitable[Any]],
