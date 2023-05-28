@@ -12,6 +12,10 @@
  - [Monetization plan](#monetization-plan)
  - [Sources](#sources)
 
+
+## What is slodon?
+Slodon aims to be a chat-based AI.
+
 ---
 ## Motivation:
 
