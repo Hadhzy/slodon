@@ -15,7 +15,7 @@
 
 <div align="center">
 
-[introduction-beta](https://github.com/FlurryGlo/slodon/tree/hels15/etc/slodon.pdf)
+[introduction-beta-pdf](https://github.com/FlurryGlo/slodon/tree/hels15/etc/slodon.pdf)
 
 </div>
 
