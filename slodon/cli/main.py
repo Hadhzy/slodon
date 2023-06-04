@@ -5,6 +5,7 @@ from textual.widgets import Footer
 from textual.widgets import Static, Label
 
 
+# Todo: Run the RPC application from the api module
 class _Sync(Static):
     """
     This class is used to synchronize the user, if it is needed.
