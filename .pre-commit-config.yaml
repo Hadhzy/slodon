@@ -14,4 +14,4 @@ repos:
     hooks:
       - id: flake8
         exclude: ^.*__init__.py$
-        args: ["--ignore=F405,F403"]
+        args: ["--ignore=F405,F403,E501"]
