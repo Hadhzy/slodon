@@ -15,7 +15,3 @@ class DisplayConnectionError(Exception):
 
 class ConnectionClosedError(Exception):
     pass
-
-
-class XError(Exception):
-    pass

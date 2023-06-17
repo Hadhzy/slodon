@@ -1,0 +1,1 @@
+Main library API based on the user's operating system. Every-singe implementation is highly using the [core functionalities](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix/systems).

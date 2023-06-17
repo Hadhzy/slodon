@@ -1,7 +1,7 @@
 import uuid
 
 # This project
-from slodon.slodonix.protocol.connect import Connection
+from .connect import Connection
 
 
 class BaseDisplay:
@@ -25,11 +25,12 @@ class BaseDisplay:
         ### Returns
         - None
         """
-        self.display_name = display
+        self.display_name = display  # the display name
         self.default_screen = "TBD"
-        self.id = uuid.uuid4()
+        self.id = uuid.uuid4()  # obtain custom id
         # Connection here
-        self.connection = Connection(display)
+
+        self.connection = Connection(display)  # create the connection
 
         self.meta = self.Meta(
             display_name=self.display_name,

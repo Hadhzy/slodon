@@ -1,6 +1,5 @@
 # Inspired by: https://github.com/python-xlib/python-xlib/blob/master/Xlib/support/unix_connect.py
 import socket
-from slodon.slodonix.errors import *
 import re
 import os
 from typing import Type
@@ -8,33 +7,8 @@ import uuid
 from uuid import UUID
 
 # This project
-from slodon.slodonix.utils.func import is_socket_connected
-
-
-SUPPORTED_PROTOCOLS = (None, "tcp", "unix")
-
-
-class _OPEN:
-    """Opened connection"""
-
-    pass
-
-
-class _CLOSE:
-    """Closed Connection"""
-
-    pass
-
-
-class _STATUS:
-    """EITHER _OPEN or _CLOSE"""
-
-    STATUS = Type[_OPEN] | Type[_CLOSE]
-
-
-DISPLAY_RE = re.compile(
-    r"^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$"
-)
+from ..utils.func import is_socket_connected
+from ..errors import *
 
 
 def get_tcp(address: str, dno: int) -> socket.SocketType:
@@ -89,7 +63,7 @@ def get_display(display) -> tuple[str, str, str, int, int]:
     return display, protocol, host, dno, screen
 
 
-def get_socket(display) -> socket.SocketType:
+def _get_socket(display) -> socket.SocketType:
     """
     Make a connection to a display
     """
@@ -119,6 +93,50 @@ def get_socket(display) -> socket.SocketType:
         raise DisplayConnectionError(display, str(val))
 
     return s
+
+
+SUPPORTED_PROTOCOLS = (None, "tcp", "unix")
+
+DISPLAY_RE = re.compile(
+    r"^((?P<proto>tcp|unix)/)?(?P<host>[-:a-zA-Z0-9._]*):(?P<dno>[0-9]+)(\.(?P<screen>[0-9]+))?$"
+)
+
+
+class _OPEN:
+    """Opened connection"""
+
+    pass
+
+
+class _CLOSE:
+    """Closed Connection"""
+
+    pass
+
+
+class _STATUS:
+    """EITHER _OPEN or _CLOSE"""
+
+    STATUS = Type[_OPEN] | Type[_CLOSE]
+
+
+class Socket:
+    """
+    Represents a socket
+    """
+    def __init__(self, display) -> None:
+        """
+        Socket initialization
+        ### Arguments
+        - socket (socket.SocketType): the socket
+        - address (str): the address
+        - dno (int): the display number
+        """
+
+        self._socket = _get_socket(display)
+
+    def get_socket(self) -> socket.SocketType:
+        return self._socket
 
 
 class Connection:
@@ -167,7 +185,7 @@ class Connection:
 
     # noinspection PyMethodMayBeStatic
     def _make_connection(self, display_info) -> socket.SocketType:
-        return get_socket(display_info)
+        return Socket(display_info).get_socket()
 
     @property
     def status(self) -> _STATUS.STATUS:
