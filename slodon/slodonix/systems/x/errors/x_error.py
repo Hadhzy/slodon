@@ -136,4 +136,4 @@ class BadWindow(XError):
     """
     A value for a window argument does not name a defined window
     """
-    pass
+
