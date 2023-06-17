@@ -56,6 +56,7 @@ The goal of Slodon is to be able to control applications over [user_space](https
 
 [Poetry](https://python-poetry.org/) (for dependency management)
 
+[PAPER-DEVELOPMENT](https://docs.google.com/document/d/1jaISQOMJTHx3S7GdU-rlgufaOBUPQqSh5pI9_nGwt54/edit?usp=sharing)
 ###  Sources:
 - [core_developer](https://github.com/FlurryGlo/slodon/blob/main/etc/core_developer.md)
 - [developing](https://github.com/FlurryGlo/slodon/blob/main/etc/developing.md)
