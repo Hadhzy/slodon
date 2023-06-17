@@ -54,3 +54,8 @@ def create_window(simple=False) -> XWindow:
         # return a simple window
         pass
     # return normal window
+
+
+def destroy_window():
+    # https://tronche.com/gui/x/xlib/window/destroy.html
+    pass

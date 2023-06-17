@@ -1,4 +1,6 @@
 # Based on: https://tronche.com/gui/x/xlib/color/XCreateColormap.html
+# https://tronche.com/gui/x/xlib/pixmap-and-cursor/
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
