@@ -7,8 +7,8 @@ import uuid
 from uuid import UUID
 
 # This project
-from ..utils.func import is_socket_connected
-from ..errors import *
+from slodon.slodonix.systems.x.utils.func import is_socket_connected
+from slodon.slodonix.systems.x.errors import *
 
 
 def get_tcp(address: str, dno: int) -> socket.SocketType:

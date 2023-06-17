@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 # this project
 if TYPE_CHECKING:
-    from ..display.display import Display
+    from slodon.slodonix.systems.x.display.display import Display
 
 
 class XError(Exception):

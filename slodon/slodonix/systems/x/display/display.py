@@ -1,6 +1,6 @@
 """Basic display"""
 import os
-from ..protocol.display import BaseDisplay
+from slodon.slodonix.systems.x.protocol.display import BaseDisplay
 
 
 class Display(BaseDisplay):
