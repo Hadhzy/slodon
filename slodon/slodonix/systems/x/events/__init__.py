@@ -1,4 +1,4 @@
-# This code is based on python3-xlib
+# This code is based on python3-x
 # https://github.com/simonzack/python3-xlib
 
 # global
