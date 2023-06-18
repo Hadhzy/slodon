@@ -1,6 +1,8 @@
 """Basic display"""
 from slodon.slodonix.systems.x.protocol.display import BaseDisplay
 
+__all__ = ["open_display", "Display"]
+
 
 class Display(BaseDisplay):
     """

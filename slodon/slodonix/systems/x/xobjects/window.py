@@ -1,6 +1,8 @@
 # https://tronche.com/gui/x/xlib/window/
 # https://tronche.com/gui/x/xlib/window/attributes
 
+__all__ = ["create_window", "destroy_window", "XWindow"]
+
 
 class XWindow:
     """

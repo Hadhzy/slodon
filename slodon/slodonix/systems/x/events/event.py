@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 # This project
 if TYPE_CHECKING:
     from slodon.slodonix.systems.x.display.display import Display
-    from slodon.slodonix.systems.x.resources.window import XWindow
+    from slodon.slodonix.systems.x.xobjects.window import XWindow
 
 
 @dataclass
