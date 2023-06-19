@@ -1,5 +1,5 @@
 """
-Auto interactions implementation for slodonix
+Auto interactions implementation for slodonix.
 """
 
 
