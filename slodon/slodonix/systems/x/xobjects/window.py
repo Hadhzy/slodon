@@ -46,7 +46,7 @@ class XWindow:
 
 
 # Todo: Return a simple or a normal window based on the argument.
-def create_window(simple=False) -> XWindow:
+def create_window(simple=False):
     """
     Return an XWindow object.
     reference: https://tronche.com/gui/x/xlib/window/XCreateWindow.html
