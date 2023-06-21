@@ -1,9 +1,10 @@
 # https://www.win7dll.info/user32_dll.html
 from ctypes import windll as w
-
+import ctypes
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
+from slodon.slodonix.systems.windows.structures import POSITION
 
 __all__ = ["Display", "get_os", "DisplayContext"]
 
@@ -31,10 +32,11 @@ class _Interact:
             - None
         """
 
+    # Todo: redefine this by using the latest SendInput function
     # noinspection PyMethodMayBeStatic
     def key_down(self, key: str) -> None:
         """
-        https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-keybd_event
+        https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
         Key press without release
         ### Arguments
           - key (str): The key(FROM UTILS.KEY_NAMES) to press down
@@ -47,20 +49,12 @@ class _Interact:
 
         w.user32.keybd_event(key_map[key], 0, 0, 0)
 
-    def position(self) -> Position:
-        """
-        x-y position of the mouse
-        ### Arguments
-          - key (str): Return back the mouse position
-        ### Returns
-          - Position object
-        """
-
     def screen(self):
         """ """
         pass
 
-    def moveto(self):
+    # noinspection PyMethodMayBeStatic
+    def moveto(self, x: int, y: int):
         """
         x-y position of the mouse
         ### Arguments
@@ -68,6 +62,7 @@ class _Interact:
         ### Returns
          - None
         """
+        w.user32.SetCursorPos(x, y)
 
     def mouse_down(self):
         """ """
@@ -105,6 +100,20 @@ class _Info:
 
     def get_top_window(self):
         pass
+
+    # noinspection PyMethodMayBeStatic
+    def position(self) -> Position:
+        """
+        x-y position of the mouse
+        ### Returns
+          - Position object with the x and y coordinates
+        """
+
+        pos = POSITION()
+
+        w.user32.GetCursorPos(ctypes.byref(pos))  # fill up the pointer with the information
+
+        return Position(pos.x, pos.y)  # access it from the pointer
 
 
 class Display:

@@ -1,9 +1,9 @@
 from slodon.slodonix import *
 
+
 with DisplayContext() as display:
-    display.interact.key_down('a')
+    print(display.info.position())
+    display.interact.moveto(100, 100)
 
 
-
-
-
+print(get_os())
