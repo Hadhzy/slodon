@@ -11,25 +11,22 @@ class Screen:
     """
     Represent a screen in a display on windows, it contains information about the screen.
     """
+
     pass
 
 
 class _Interact:
-    """
+    """ """
 
-    """
     def __init__(self) -> None:
-        """
-
-        """
-        pass
+        """ """
 
     def key_up(self, key) -> None:
         """
-         key release
-         ### Arguments
+        key release
+        ### Arguments
             - key (str): The key to release
-         ### Returns
+        ### Returns
             - None
         """
 
@@ -52,9 +49,7 @@ class _Interact:
         """
 
     def screen(self):
-        """
-
-        """
+        """ """
         pass
 
     def moveto(self):
@@ -64,48 +59,34 @@ class _Interact:
          - key (str): Return back the mouse position
         ### Returns
          - None
-         """
+        """
 
     def mouse_down(self):
-        """
-
-        """
+        """ """
         pass
 
     def mouse_up(self):
-        """
-
-        """
+        """ """
         pass
 
     def click(self):
-        """
-
-        """
+        """ """
         pass
 
     def mouse_is_swapped(self):
-        """
-
-        """
+        """ """
         pass
 
     def send_mouse_event(self):
-        """
-
-        """
+        """ """
         pass
 
     def scrool(self):
-        """
-
-        """
+        """ """
         pass
 
     def hscrool(self):
-        """
-
-        """
+        """ """
         pass
 
 
@@ -119,9 +100,8 @@ class _Info:
 
 
 class Display:
-    """
+    """ """
 
-    """
     def __init__(self):
         self.interact = _Interact()
         self.info = _Info()
