@@ -1,6 +1,7 @@
 import ctypes
 from ctypes import wintypes
 # Basic structures
+# https://coderslegacy.com/structs-with-python-ctypes/
 
 
 class MOUSEINPUT(ctypes.Structure):
