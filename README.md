@@ -19,6 +19,13 @@
 
 </div>
 
+<div align="center">
+
+[discord](https://discord.gg/Qt89JBB2ES)
+
+</div>
+
+
 # Table of Contents:
 
  - [About](#about)
