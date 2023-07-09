@@ -5,7 +5,7 @@ import ctypes
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.structures import POSITION
-
+from slodon.slodonix.systems.windows.constants import *
 __all__ = ["Display", "get_os", "DisplayContext"]
 
 
@@ -25,21 +25,44 @@ class _Interact:
 
     def key_up(self, key: str) -> None:
         """
-        key release
+        - https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup#parameters
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L295-L332
+
         ### Arguments
             - key (str): The key(FROM UTILS.KEY_NAMES) to release
         ### Returns
             - None
         """
 
+        if key_map[key] is None:
+            return
+
+        needs_shift = is_shift_character(key)
+
+        mods, vk_code = divmod(key_map[key], 0x100)
+
+        for apply_mod, vk_mod in [(mods & 4, 0x12), (mods & 2, 0x11),
+                                  (mods & 1 or needs_shift, 0x10)]:  # HANKAKU not supported! mods & 8
+            if apply_mod:
+                ctypes.windll.user32.keybd_event(vk_mod, 0, 0, 0)  #
+
+        ctypes.windll.user32.keybd_event(vk_code, 0, KEYEVENTF_KEYUP, 0)
+
+        for apply_mod, vk_mod in [(mods & 1 or needs_shift, 0x10), (mods & 2, 0x11),
+                                  (mods & 4, 0x12)]:  # HANKAKU not supported! mods & 8
+            if apply_mod:
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
+
     # Todo: redefine this by using the latest SendInput function
     # noinspection PyMethodMayBeStatic
-    def key_down(self, key: str) -> None:
+    def key_down(self, key: str, with_release=False) -> None:
         """
-        https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
-        Key press without release
+        - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L250-L292
+        Key press without release | with release
         ### Arguments
           - key (str): The key(FROM UTILS.KEY_NAMES) to press down
+          - with_release (bool): Whether to release the key after press down
         ### Returns
           - None
         """
@@ -47,7 +70,24 @@ class _Interact:
         if key_map[key] is None:  # the key is not valid
             return
 
-        w.user32.keybd_event(key_map[key], 0, 0, 0)
+        needs_shift = is_shift_character(key)
+
+        # https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+        mods, vk_code = divmod(key_map[key], 0x100)
+
+        for apply_mod, vk_mod in [(mods & 4, 0x12), (mods & 2, 0x11),
+                                  (mods & 1 or needs_shift, 0x10)]:  # HANKAKU not supported! mods & 8
+            if apply_mod:
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
+
+        ctypes.windll.user32.keybd_event(vk_code, 0, KEYEVENTF_KEYDOWN, 0)
+        for apply_mod, vk_mod in [(mods & 1 or needs_shift, 0x10), (mods & 2, 0x11),
+                                  (mods & 4, 0x12)]:  # HANKAKU not supported! mods & 8
+            if apply_mod:
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
+
+        if with_release:
+            self.key_up(key)
 
     def screen(self):
         """ """
