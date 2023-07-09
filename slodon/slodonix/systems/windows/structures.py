@@ -69,3 +69,13 @@ class POSITION(ctypes.Structure):
         ("x", ctypes.c_long),
         ("y", ctypes.c_long),
     ]
+
+
+class SIZE(ctypes.Structure):
+    """
+    Size of the window structure
+    """
+    _fields_ = [
+        ("cx", ctypes.c_long),
+        ("cy", ctypes.c_long),
+    ]
