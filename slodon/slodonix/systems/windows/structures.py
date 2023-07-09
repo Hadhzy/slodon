@@ -18,6 +18,7 @@ class MOUSEINPUT(ctypes.Structure):
     ]
 
 
+# Todo: Define it by using the new one: https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
 class KEYBDINPUT(ctypes.Structure):
     """
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
@@ -57,4 +58,14 @@ class INPUT(ctypes.Structure):
     _fields_ = [
         ("type", ctypes.wintypes.DWORD),
         ("i", _I),
+    ]
+
+
+class POSITION(ctypes.Structure):
+    """
+    Position of the mouse structure
+    """
+    _fields_ = [
+        ("x", ctypes.c_long),
+        ("y", ctypes.c_long),
     ]
