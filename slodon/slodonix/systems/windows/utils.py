@@ -24,7 +24,7 @@ def is_shift_character(character: str) -> bool:
     return character.isupper() or character in set('~!@#$%^&*()_+{}|:"<>?')
 
 
-def send_mouse_event(ev, x, y, dwData=0, instance=None):
+def send_mouse_event(ev, x, y, dw_data=0, instance=None):
     """
     - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L466C1-L504
     - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event
@@ -34,21 +34,21 @@ def send_mouse_event(ev, x, y, dwData=0, instance=None):
        constants for this argument.
        - x (int): The x position of the mouse event.
        - y (int): The y position of the mouse event.
-        dwData (int): The argument for mouse_event()'s dwData parameter. So far
+       - instance: The info class instance to get the size method from.
+        dw_data (int): The argument for mouse_event()'s dwData parameter. So far
         this is only used by mouse scrolling.
 
     ### Returns:
       None
 
     """
-    assert x != None and y != None, "x and y cannot be set to None"
-    # TODO: ARG! For some reason, SendInput isn't working for mouse events. I'm switching to using the older mouse_event win32 function.
+    assert x is not None and y is not None, "x and y cannot be set to None"
     # mouseStruct = MOUSEINPUT()
     # mouseStruct.dx = x
     # mouseStruct.dy = y
     # mouseStruct.mouseData = ev
     # mouseStruct.time = 0
-    # mouseStruct.dwExtraInfo = ctypes.pointer(ctypes.c_ulong(0)) # according to https://stackoverflow.com/questions/13564851/generate-keyboard-events I can just set this. I don't really care about this value.
+
     # inputStruct = INPUT()
     # inputStruct.mi = mouseStruct
     # inputStruct.type = INPUT_MOUSE
@@ -59,10 +59,10 @@ def send_mouse_event(ev, x, y, dwData=0, instance=None):
     instance_info = instance.size()  # SIZE STRUCTURE
     width, height = instance_info.cx, instance_info.cy
 
-    convertedX = 65536 * x // width + 1
-    convertedY = 65536 * y // height + 1
+    converted_x = 65536 * x // width + 1
+    converted_y = 65536 * y // height + 1
     ctypes.windll.user32.mouse_event(
-        ev, ctypes.c_long(convertedX), ctypes.c_long(convertedY), dwData, 0
+        ev, ctypes.c_long(converted_x), ctypes.c_long(converted_y), dw_data, 0
     )
 
     # TODO: Too many false positives with this code: See: https://github.com/asweigart/pyautogui/issues/108
