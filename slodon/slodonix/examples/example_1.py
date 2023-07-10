@@ -3,19 +3,7 @@ from slodon.slodonix import *
 # with display context manager
 
 with DisplayContext() as display:
-    display.interact.key_down("h")
-    display.interact.key_down("h")
+    display.key_down("h")  # release key automatically
+    display.key_down("h")
+    display.move_to(100, 200)
 
-# without display context manager
-display = Display()
-display.interact.key_down("h")
-display.interact.key_down("h")
-
-# with key_release
-
-with DisplayContext() as display:
-    display.interact.key_down("h", with_release=True)
-    display.interact.key_down("h")
-
-# get current os
-print(get_os())

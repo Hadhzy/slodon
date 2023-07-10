@@ -1,7 +1,9 @@
 # https://www.win7dll.info/user32_dll.html
+# Taken inspiration from: https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py
+# (pyautogui: see notice.md)
 from ctypes import windll as w
 import ctypes
-from typing import Union, Optional, Callable
+from typing import Union, Callable
 
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
@@ -15,10 +17,10 @@ ev = MOUSEEVENTF_LEFTDOWN
 ev_up = MOUSEEVENTF_LEFTUP
 ev_click = MOUSEEVENTF_LEFTCLICK
 
-X_TYPE = Union[int, float, None, tuple, Optional]
-Y_TYPE = Union[int, float, None, Optional]
-DURATION_TYPE = Union[float, Optional]
-TWEEN_TYPE = Union[Callable, Optional]  # Callable -> tween function
+X_TYPE = Union[int, float, None, tuple]
+Y_TYPE = Union[int, float, None]
+DURATION_TYPE = Union[float, None]
+TWEEN_TYPE = Union[Callable, None]  # Callable -> tween function
 
 
 class Screen:
@@ -304,7 +306,7 @@ class Display:
 
     def __init__(self):
         self.info = _Info()
-        self.interact = _Interact(info=self.info)
+        self._interact = _Interact(info=self.info)  # SHOULD BE NOT USED DIRECTLY OUTSIDE THE CLASS
 
     def key_up(self, key, _pause=True) -> None:
         """
@@ -320,15 +322,15 @@ class Display:
         if len(key) > 1:
             key = key.lower()
 
-        self.interact.key_up(key)
+        self._interact.key_up(key)
 
-    def key_down(self, key, _pause=True) -> None:
+    def key_down(self, key, _pause=True, with_release=True) -> None:
         """
         Performs a keyboard key press down (without the release afterwards).
 
         ### Arguments:
             - key (str): The key to be pressed. See the [keys](keys.md) page for valid key strings.
-
+            - with_release (bool): If True, the key will be released after the press down.
         ### Returns:
             - None
         """
@@ -336,7 +338,7 @@ class Display:
         if len(key) > 1:
             key = key.lower()
 
-        self.interact.key_down(key)
+        self._interact.key_down(key, with_release=with_release)
 
     def move_to(
         self,
@@ -371,6 +373,13 @@ class Display:
         ### Returns:
             None
         """
+        self._interact.moveto(x, y)
+
+    def mouse_down(self):
+        pass
+
+    def mouse_up(self):
+        pass
 
 
 class DisplayContext(Display):
@@ -382,6 +391,14 @@ class DisplayContext(Display):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
+
+class DisplayAsParent(Display):
+    """
+    Use the display class as a parent for other classes.
+
+    TBD
+    """
 
 
 def get_os() -> str:

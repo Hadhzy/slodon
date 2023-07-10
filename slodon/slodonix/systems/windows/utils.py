@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import ctypes
-
+from slodon.slodonix.systems.windows.constants import *
 __all__ = ["Position", "is_shift_character", "send_mouse_event", "linear"]
 
 
@@ -81,3 +81,27 @@ def linear(n):
     if not 0.0 <= n <= 1.0:
         raise Exception("Argument must be between 0.0 and 1.0.")
     return n
+
+
+def fail_safe_check(fail_safe: bool = True, instance=None):
+    """
+    As a safety feature, a fail-safe feature is enabled by default. When a PyAutoGUI
+    function is called, if the mouse is in any of the four corners of the primary monitor,
+    they will raise a pyautogui.FailSafeException.
+
+    - fail_safe (bool): Whether to use the fail-safe feature or not.
+    - instance Desktop instance in order to reach methods like size() and position()
+    """
+
+    if fail_safe and tuple(instance.position()) in FAILSAFE_POINTS:
+        raise Exception(
+            "Triggered fail-safe. To disable this functionality, set fail_safe to False."
+        )
+
+
+def slodonix_check():
+    # Todo: Use fail_safe_check
+    """
+    A decorator which can be used over all the methods in Desktop.
+    Prevent errors.
+    """
