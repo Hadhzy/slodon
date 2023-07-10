@@ -1,6 +1,7 @@
 # https://www.win7dll.info/user32_dll.html
 from ctypes import windll as w
 import ctypes
+from typing import Union, Optional, Callable
 
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
@@ -9,8 +10,15 @@ from slodon.slodonix.systems.windows.structures import POSITION, SIZE
 from slodon.slodonix.systems.windows.constants import *
 
 __all__ = ["Display", "get_os", "DisplayContext"]
+
 ev = MOUSEEVENTF_LEFTDOWN
 ev_up = MOUSEEVENTF_LEFTUP
+ev_click = MOUSEEVENTF_LEFTCLICK
+
+X_TYPE = Union[int, float, None, tuple, Optional]
+Y_TYPE = Union[int, float, None, Optional]
+DURATION_TYPE = Union[float, Optional]
+TWEEN_TYPE = Union[Callable, Optional]  # Callable -> tween function
 
 
 class Screen:
@@ -24,8 +32,8 @@ class Screen:
 class _Interact:
     """ """
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, info) -> None:
+        self.info = info
 
     # noinspection PyMethodMayBeStatic
     def key_up(self, key: str) -> None:
@@ -107,7 +115,7 @@ class _Interact:
             self.key_up(key)
 
     # noinspection PyMethodMayBeStatic
-    def moveto(self, x: int, y: int):
+    def moveto(self, x: int, y: int) -> None:
         """
         x-y position of the mouse
         ### Arguments
@@ -118,7 +126,7 @@ class _Interact:
         w.user32.SetCursorPos(x, y)
 
     # noinspection PyMethodMayBeStatic
-    def mouse_down(self, x, y, button, with_release=False):
+    def mouse_down(self, x, y, button, with_release=False) -> None:
         """
         - https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L375-L401
@@ -154,7 +162,7 @@ class _Interact:
             self.mouse_up(x, y, button)
 
     # noinspection PyMethodMayBeStatic
-    def mouse_up(self, x, y, button):
+    def mouse_up(self, x, y, button) -> None:
         """
         - https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L404-L429
@@ -188,23 +196,66 @@ class _Interact:
             # see https://github.com/asweigart/pyautogui/issues/60
             pass
 
-    def click(self):
-        """ """
-        pass
+    # noinspection PyMethodMayBeStatic
+    def click(self, x, y, button) -> None:
+        """
+        - https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-clicks
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L432-L458
+        ### Arguments
+            - x (int): The x position of the mouse event.
+            - y (int): The y position of the mouse event.
+            - button (str): The mouse button, either 'left', 'middle', or 'right'
+        ### Returns
+            - None
+        """
 
+        global ev_click
+        if button not in (LEFT, MIDDLE, RIGHT):
+            raise ValueError(
+                'button arg to _click() must be one of "left", "middle", or "right", not %s'
+                % button
+            )
+
+        if x is None:
+            x = self.info.position().x
+        if y is None:
+            y = self.info.position().y
+
+        if button == LEFT:
+            ev_click = MOUSEEVENTF_LEFTCLICK
+
+        if button == MIDDLE:
+            ev_click = MOUSEEVENTF_MIDDLECLICK
+
+        if button == RIGHT:
+            ev_click = MOUSEEVENTF_RIGHTCLICK
+
+        try:
+            send_mouse_event(ev_click, x, y, instance=_Info())
+
+        except (PermissionError, OSError):
+            pass
+
+    # noinspection PyMethodMayBeStatic
     def mouse_is_swapped(self):
-        """ """
-        pass
+        """
+        - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics (SM_SWAPBUTTON)
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L461
 
-    def send_mouse_event(self):
-        """ """
-        pass
+        Nonzero if the meanings of the left and right mouse buttons are swapped; otherwise, 0.
+        # TODO - measure the performance of checking this setting for each click.
+        """
+        return w.user32.GetSystemMetrics(23) != 0
 
     def scrool(self):
         """ """
         pass
 
     def hscrool(self):
+        """ """
+        pass
+
+    def vscrool(self):
         """ """
         pass
 
@@ -252,8 +303,74 @@ class Display:
     """
 
     def __init__(self):
-        self.interact = _Interact()
         self.info = _Info()
+        self.interact = _Interact(info=self.info)
+
+    def key_up(self, key, _pause=True) -> None:
+        """
+        Performs a keyboard key release  (without the press down beforehand).
+
+        ### Arguments:
+            - key (str): The key to be pressed. See the [keys](keys.md) page for valid key strings.
+
+        ### Returns:
+            - None
+        """
+
+        if len(key) > 1:
+            key = key.lower()
+
+        self.interact.key_up(key)
+
+    def key_down(self, key, _pause=True) -> None:
+        """
+        Performs a keyboard key press down (without the release afterwards).
+
+        ### Arguments:
+            - key (str): The key to be pressed. See the [keys](keys.md) page for valid key strings.
+
+        ### Returns:
+            - None
+        """
+
+        if len(key) > 1:
+            key = key.lower()
+
+        self.interact.key_down(key)
+
+    def move_to(
+        self,
+        x: X_TYPE = None,
+        y: Y_TYPE = None,
+        duration: DURATION_TYPE = 0.0,
+        tween: TWEEN_TYPE = linear,
+        _pause=True,
+    ):
+        """
+        Moves the mouse cursor to a point on the screen.
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
+        ### Arguments:
+            - x (int): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
+
+            - y (int): : The y position on the screen where the
+                        click happens. None by default.
+
+            - duration (float): The number of seconds to perform the mouse move to the x,y coordinates.
+                0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+
+            - tween (func, optional): The tweening function used if the duration is not
+            0. A linear tween is used by default.
+
+        ### Returns:
+            None
+        """
 
 
 class DisplayContext(Display):

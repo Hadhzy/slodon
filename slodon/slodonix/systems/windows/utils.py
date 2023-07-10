@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import ctypes
 
-__all__ = ["Position", "is_shift_character", "send_mouse_event"]
+__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear"]
 
 
 @dataclass
@@ -68,3 +68,16 @@ def send_mouse_event(ev, x, y, dw_data=0, instance=None):
     # TODO: Too many false positives with this code: See: https://github.com/asweigart/pyautogui/issues/108
     # if ctypes.windll.kernel32.GetLastError() != 0:
     #    raise ctypes.WinError()
+
+
+def linear(n):
+    """
+      Returns ``n``, where ``n`` is the float argument between ``0.0`` and ``1.0``. This function is for the default
+      linear tween for mouse moving functions.
+
+      This function was copied from PyTweening module, so that it can be called even if PyTweening is not installed.
+      """
+
+    if not 0.0 <= n <= 1.0:
+        raise Exception("Argument must be between 0.0 and 1.0.")
+    return n
