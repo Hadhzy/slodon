@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import ctypes
 from slodon.slodonix.systems.windows.constants import *
-__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear"]
+__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear", "fail_safe_check"]
 
 
 @dataclass
@@ -93,7 +93,7 @@ def fail_safe_check(fail_safe: bool = True, instance=None):
     - instance Desktop instance in order to reach methods like size() and position()
     """
 
-    if fail_safe and tuple(instance.position()) in FAILSAFE_POINTS:
+    if fail_safe and tuple(instance.position(_tuple=True)) in FAILSAFE_POINTS:
         raise Exception(
             "Triggered fail-safe. To disable this functionality, set fail_safe to False."
         )
@@ -105,3 +105,13 @@ def slodonix_check():
     A decorator which can be used over all the methods in Desktop.
     Prevent errors.
     """
+
+
+def normalize_button():
+    """
+     - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L825-L879C22
+    """
+
+
+def normalize_xy_args():
+    pass

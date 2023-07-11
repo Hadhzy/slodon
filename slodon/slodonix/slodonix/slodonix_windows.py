@@ -1,15 +1,18 @@
 # https://www.win7dll.info/user32_dll.html
 # Taken inspiration from: https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py
 # (pyautogui: see notice.md)
+import time
 from ctypes import windll as w
 import ctypes
-from typing import Union, Callable
+from typing import Union, Callable, Any
 
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.structures import POSITION, SIZE
 from slodon.slodonix.systems.windows.constants import *
+from slodon.slodonix.slodonix.tween import linear, getPointOnLine
+
 
 __all__ = ["Display", "get_os", "DisplayContext"]
 
@@ -117,14 +120,63 @@ class _Interact:
             self.key_up(key)
 
     # noinspection PyMethodMayBeStatic
-    def moveto(self, x: int, y: int) -> None:
+    def moveto(self, x: int, y: int, x_offset, y_offset, duration, tween=linear) -> None:
         """
-        x-y position of the mouse
+
+        Move the mouse to the specified position
         ### Arguments
-         - key (str): Return back the mouse position
+         - x (int): x position of the mouse
+         - y (int): y position of the mouse
+         - tween (Callable): The tween function to use
+         - duration (float): The amount of time it takes to move the mouse
+         - x_offset (int): The x offset of the mouse(how  far left and right move the mouse)
+         - y_Offset (int): The y offset of the mouse (how far up and down move the mouse)
+         (https://pyautogui.readthedocs.io/en/latest/mouse.html#tween-easing-functions
+
         ### Returns
          - None
         """
+        x_offset = int(x_offset) if x_offset is not None else 0
+        y_offset = int(y_offset) if y_offset is not None else 0
+
+        if x is None and y is None and x_offset == 0 and y_offset == 0:
+            return  # Special case for no mouse movement at all.
+
+        _position = self.info.position()
+        start_x, start_y = _position.x, _position.y
+
+        x = int(x) if x is not None else start_x
+        y = int(y) if y is not None else start_y
+
+        _size = self.info.size()
+        width, height = _size.cx, _size.cy
+
+        steps = [(x, y)]
+
+        sleep_amount = MINIMUM_SLEEP
+
+        if duration > MINIMUM_DURATION:
+            num_steps = max(width, height)
+            sleep_amount = duration / num_steps
+            if sleep_amount < MINIMUM_SLEEP:
+                num_steps = int(duration / MINIMUM_SLEEP)
+                sleep_amount = duration / num_steps
+
+            steps = [getPointOnLine(start_x, start_y, x, y, tween(n / num_steps)) for n in range(num_steps)]
+            steps.append((x, y))
+
+        for tween_x, tween_y in steps:
+            if len(steps) > 1:
+                time.sleep(sleep_amount)
+
+            tween_x = int(round(tween_x))
+            tween_y = int(round(tween_y))
+
+            if (tween_x, tween_y) not in FAILSAFE_POINTS:
+                fail_safe_check(instance=self.info)
+
+            w.user32.SetCursorPos(tween_x, tween_y)
+
         w.user32.SetCursorPos(x, y)
 
     # noinspection PyMethodMayBeStatic
@@ -148,11 +200,11 @@ class _Interact:
             )
 
         if button == LEFT:
-            ev = MOUSEEVENTF_LEFTDOWN
+            ev = MOUSEEVENTF_LEFTDOWN  # value in hex: 0x0002
         elif button == MIDDLE:
-            ev = MOUSEEVENTF_MIDDLEDOWN
+            ev = MOUSEEVENTF_MIDDLEDOWN  # value in hex: 0x0020
         elif button == RIGHT:
-            ev = MOUSEEVENTF_RIGHTDOWN
+            ev = MOUSEEVENTF_RIGHTDOWN  # value in hex: 0x0008
 
         try:
             send_mouse_event(ev, x, y, instance=_Info())  # instance for the size
@@ -183,11 +235,11 @@ class _Interact:
             )
 
         if button == LEFT:
-            ev_up = MOUSEEVENTF_LEFTUP
+            ev_up = MOUSEEVENTF_LEFTUP  # value in hex: 0x0004
         elif button == MIDDLE:
-            ev_up = MOUSEEVENTF_MIDDLEUP
+            ev_up = MOUSEEVENTF_MIDDLEUP  # value in hex: 0x0040
         elif button == RIGHT:
-            ev_up = MOUSEEVENTF_RIGHTUP
+            ev_up = MOUSEEVENTF_RIGHTUP  # value in hex: 0x0010
 
         try:
             send_mouse_event(ev_up, x, y, instance=_Info())
@@ -271,11 +323,16 @@ class _Info:
         pass
 
     # noinspection PyMethodMayBeStatic
-    def position(self) -> Position:
+    def position(self, _type=float, _tuple=False) -> Position | tuple[Any, Any]:
         """
         x-y position of the mouse
+        ##Arguments
+            - _type (type): The type of the x and y coordinates
+            - _tuple (bool): If True, returns a tuple of the x and y coordinates
+
         ### Returns
           - Position object with the x and y coordinates
+
         """
 
         pos = POSITION()
@@ -283,6 +340,9 @@ class _Info:
         w.user32.GetCursorPos(
             ctypes.byref(pos)
         )  # fill up the pointer with the information
+
+        if _tuple:
+            return _type(pos.x), _type(pos.y)
 
         return Position(pos.x, pos.y)  # access it from the pointer
 
@@ -373,12 +433,40 @@ class Display:
         ### Returns:
             None
         """
-        self._interact.moveto(x, y)
+        self._interact.moveto(x, y, duration=duration, x_offset=0, y_offset=0, tween=tween)
 
-    def mouse_down(self):
-        pass
+    def mouse_down(self, x=None, y=None, button=PRIMARY, duration=0.0, tween=linear, _pause=True, with_release=True):
+        """
+        Performs pressing a mouse button down(but not up).
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
+        ### Arguments:
+            x (int, float, None, tuple, optional): The x position on the screen where the
+                mouse down happens. None by default. If tuple, this is used for x and y.
+                If x is a str, it's considered a filename of an image to find on
+                the screen with locateOnScreen() and click the center of.
+            y (int, float, None, optional): The y position on the screen where the
+                mouse down happens. None by default.
+
+            button (str, int, optional): The mouse button pressed down.
+
+        ### Returns:
+            - None
+
+        Raises:
+            SlodonixException: If button is not one of 'left', 'middle', 'right', 1, 2, or 3
+        """
+
+        # move the mouse to the x, y coordinates
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self._interact.mouse_down(x, y, button, with_release=with_release)  # press the button
 
     def mouse_up(self):
+
         pass
 
 

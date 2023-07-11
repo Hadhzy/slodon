@@ -1,7 +1,7 @@
 # https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 import ctypes
 from ctypes import wintypes
-__all__ = ["full_map"]
+__all__ = ["full_map"]  # represent the key and the virtual key code
 
 keyboard_mapping = [
     ("backspace", 0x08),
@@ -367,5 +367,3 @@ full_map = fetch(data=KEY_NAMES)
 # https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L246
 for c in range(32, 128):
     full_map[chr(c)] = ctypes.windll.user32.VkKeyScanA(ctypes.wintypes.WCHAR(chr(c)))
-
-
