@@ -16,7 +16,9 @@ __all__ = [
     "MOUSEEVENTF_RIGHTCLICK",
     "MOUSEEVENTF_MIDDLECLICK",
     "PRIMARY",
-    "FAILSAFE_POINTS"
+    "FAILSAFE_POINTS",
+    "MINIMUM_DURATION",
+    "MINIMUM_SLEEP",
 ]
 
 KEYEVENTF_KEYDOWN = 0x0000
@@ -29,6 +31,8 @@ RIGHT = "right"
 PRIMARY = "primary"
 SECONDARY = "secondary"
 
+MINIMUM_DURATION = 0.1  # 100 ms
+MINIMUM_SLEEP = 0.05  # 50 ms
 
 # Event codes to be passed to the mouse_event() win32 function.
 # Documented here: http://msdn.microsoft.com/en-us/library/windows/desktop/ms646273(v=vs.85).aspx
