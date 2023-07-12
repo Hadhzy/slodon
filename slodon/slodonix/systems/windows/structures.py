@@ -1,5 +1,6 @@
 import ctypes
 from ctypes import wintypes
+
 # Basic structures
 # https://coderslegacy.com/structs-with-python-ctypes/
 
@@ -86,8 +87,3 @@ class SIZE(ctypes.Structure):
     def __repr__(self) -> str:
         return f"<Size: {self.cx}, {self.cy}>"
 
-
-class MOUSEHOOK(ctypes.Structure):
-    """
-    https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstruct
-    """
