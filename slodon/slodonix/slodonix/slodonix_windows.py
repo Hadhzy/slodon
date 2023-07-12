@@ -5,6 +5,7 @@ import time
 from ctypes import windll as w
 import ctypes
 from typing import Union, Callable, Any, Sequence
+from abc import ABC, abstractmethod
 
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
@@ -12,9 +13,9 @@ from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.structures import POSITION, SIZE
 from slodon.slodonix.systems.windows.constants import *
 from slodon.slodonix.slodonix.tween import linear, getPointOnLine
+from slodon.slodonix.systems.windows.event import Listener
 
-
-__all__ = ["Display", "get_os", "DisplayContext"]
+__all__ = ["Display", "get_os", "DisplayContext", "DisplayAsParent"]
 
 ev = MOUSEEVENTF_LEFTDOWN
 ev_up = MOUSEEVENTF_LEFTUP
@@ -24,6 +25,13 @@ X_TYPE = Union[int, float, None, tuple]
 Y_TYPE = Union[int, float, None]
 DURATION_TYPE = Union[float, None]
 TWEEN_TYPE = Union[Callable, None]  # Callable -> tween function
+
+KEY_DOWN: bool | str = (
+    False  # Represents if a key is down, if so it will be the key name
+)
+MOUSE_DOWN: bool | str = (
+    False  # Represents if a mouse button is down, if so it will be the button name
+)
 
 
 class Screen:
@@ -336,7 +344,7 @@ class _Interact:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L68
         """
-        return self.vscrool(clicks, x, None)
+        return self.vscrool(clicks, x, y)
 
     def hscrool(self, clicks, x=None, y=None):
         """
@@ -484,13 +492,13 @@ class Display:
             keys = [keys]
 
         else:
-            lowerKeys = []
+            lower_keys = []
             for s in keys:
                 if len(s) > 1:
-                    lowerKeys.append(s.lower())
+                    lower_keys.append(s.lower())
                 else:
-                    lowerKeys.append(s)
-            keys = lowerKeys
+                    lower_keys.append(s)
+            keys = lower_keys
         interval = float(interval)
         for i in range(presses):
             for k in keys:
@@ -529,7 +537,6 @@ class Display:
             message = "".join(message)
 
         for char in message:
-
             if len(char) > 1:
                 char.lower()
 
@@ -775,7 +782,9 @@ class Display:
         self._interact.mouse_up(button=button)
 
     @slodonix_check(instance=_Info())
-    def drag_rel(self, x=None, y=None, duration=0.0, tween=linear, button=PRIMARY) -> None:
+    def drag_rel(
+        self, x=None, y=None, duration=0.0, tween=linear, button=PRIMARY
+    ) -> None:
         """
          Performs a mouse drag (mouse movement while a button is held down) to a
          point on the screen(relative).
@@ -803,10 +812,10 @@ class Display:
             ### Returns
              - None
         """
-        self._interact.mouse_down(
-            button=button, with_release=False
-        )
-        self._interact.moveto(None, None, x, y, duration=duration, tween=tween)  # only pass in the offset
+        self._interact.mouse_down(button=button, with_release=False)
+        self._interact.moveto(
+            None, None, x, y, duration=duration, tween=tween
+        )  # only pass in the offset
         self._interact.mouse_up(button=button)
 
     @slodonix_check(instance=_Info())
@@ -840,26 +849,26 @@ class Display:
     @slodonix_check(instance=_Info())
     def hscrool(self, clicks, x=None, y=None):
         """
-       Performs a scrool of the mouse scrool wheel(horizontal)
+        Performs a scrool of the mouse scrool wheel(horizontal)
 
-        Whether this is a vertical or horizontal scroll depends on the underlying
-        operating system.
+         Whether this is a vertical or horizontal scroll depends on the underlying
+         operating system.
 
-       The x and y parameters detail where the mouse event happens. If None, the
-       current mouse position is used. If a float value, it is rounded down. If
-       outside the boundaries of the screen, the event happens at edge of the
-       screen.
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
 
-       ### Arguments:
-            - clicks (int, float): The amount of scrolling to perform.
-            -x (int, float, None, tuple, optional): The x position on the screen where the
-               click happens. None by default. If tuple, this is used for x and y.
-            -y (int, float, None, optional): The y position on the screen where the
-            click happens. None by default.
+        ### Arguments:
+             - clicks (int, float): The amount of scrolling to perform.
+             -x (int, float, None, tuple, optional): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
+             -y (int, float, None, optional): The y position on the screen where the
+             click happens. None by default.
 
-       ### Returns:
-            - None
-       """
+        ### Returns:
+             - None
+        """
 
         if type(x) in (tuple, list):
             x, y = x[0], x[1]
@@ -892,20 +901,34 @@ class DisplayContext(Display):
         pass
 
 
-class DisplayAsParent(Display):
+class DisplayAsParent(Display, ABC):
     """
     Use the display class as a parent for other classes.
 
     TBD
     """
 
+    def __init__(self):
+        super().__init__()
+        self._listener()  # initialise the listener
+
+    @abstractmethod
     def body(self):
         """
         Every interaction here
         """
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Execute the body
+        """
         return self.body()
+
+    # noinspection PyMethodMayBeStatic
+    def _listener(self):
+        _obj = Listener(_Info())  # pass in the Info
+
+        _obj.add_listener("mouse", "trigger_mouse", self)
 
 
 def get_os() -> str:

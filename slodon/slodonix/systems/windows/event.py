@@ -1,64 +1,50 @@
 import dataclasses
 import threading
-from ctypes import windll as w
-from ctypes import Structure
-from uuid import uuid4
 
-# This project
-from slodon.log import slodon_logger
+from typing import TYPE_CHECKING
 
-
-class SLODODIXThread(threading.Thread):
-    """
-
-    """
-
-    def __init__(self, code, structure):
-
-        self.code = code
-        self.structure = structure
-        self.id = uuid4()  # unique id
-        super().__init__()
-
-        self._running = False
-
-    def run(self):
-        w.MouseProc(0, )
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return f"code:{self.code}, structure:{self.structure}, id:{self.id}"
+if TYPE_CHECKING:
+    from slodon.slodonix.slodonix.slodonix_windows import _Info
+    from slodon.slodonix.slodonix.slodonix_windows import DisplayAsParent
 
 
 class Listener:
-
-    THREADS: list[threading.Thread] = []  # all threads
 
     """
     https://learn.microsoft.com/en-us/windows/win32/winmsg/hooks
     """
 
-    def __init__(self) -> None:
+    def __init__(self, _instance: "_Info") -> None:
         super().__init__()
-        self.wait()
+        self.info = _instance  # _Info() instance
 
-    def add_listener(self, code: int, structure: Structure) -> None:
-        thread = SLODODIXThread(code, structure)
-        thread.start()
+    def add_listener(self, _type: str, method: callable, obj: "DisplayAsParent") -> None:
 
-        self.THREADS.append(thread)
+        """
+        Start a thread to listen for a specific event type.
+        ### Arguments:
+              - _type (str): The type of event to listen for.
+              - method (callable): The method to call when the event is triggered.
+              - obj: The object to call the method on.
+        ### Returns:
+           None
+        """
 
-    def wait(self) -> None:
-        for thread in self.THREADS:
-            thread.join()
+        match _type:
+            case "mouse":  # In case of mouse event
+                movement_thread = threading.Thread(target=self._detect_mouse(method, obj))  # create a thread
+                movement_thread.start()  # start the thread
+            case "key_pressed":
+                pass
 
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
-        return "<Listener: {}>".format(self.THREADS)
+    def _detect_mouse(self, method: callable, obj):
+        prev_pos = self.info.position()
+        while True:
+            curr_pos = self.info.position()
+            if prev_pos != curr_pos:
+                _method = getattr(obj, method)  # get the method based on the name
+                _method(curr_pos)  # position has been changed call with the new one
+            prev_pos = curr_pos
 
 
 @dataclasses.dataclass
