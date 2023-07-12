@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 import ctypes
+import functools
+# This project
 from slodon.slodonix.systems.windows.constants import *
-__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear", "fail_safe_check"]
+
+__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear", "fail_safe_check", "slodonix_check"]
 
 
 @dataclass
@@ -99,12 +102,19 @@ def fail_safe_check(fail_safe: bool = True, instance=None):
         )
 
 
-def slodonix_check():
-    # Todo: Use fail_safe_check
+def slodonix_check(instance=None):
     """
     A decorator which can be used over all the methods in Desktop.
     Prevent errors.
     """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            fail_safe_check(instance=instance)
+            return func(*args, **kwargs)
+
+        return wrapper
+    return decorator
 
 
 def normalize_button():

@@ -79,3 +79,15 @@ class SIZE(ctypes.Structure):
         ("cx", ctypes.c_long),
         ("cy", ctypes.c_long),
     ]
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def __repr__(self) -> str:
+        return f"<Size: {self.cx}, {self.cy}>"
+
+
+class MOUSEHOOK(ctypes.Structure):
+    """
+    https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mousehookstruct
+    """
