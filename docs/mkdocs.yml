@@ -1,0 +1,36 @@
+site_name: Slodon
+site_description: Slodon framework, ai agent,
+theme:
+  name: material
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: pink
+    accent: indigo
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: black
+    accent: amber
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+    features:
+        - search.suggest
+        - search.highlight
+        - content.tabs.link
+        - navigation.indexes
+        - toc.integrate
+        - navigation.tabs
+        - navigation.sticky
+        - navigation.sections
+        - navigation.expand
+        - navigation.path
+        -
+        - content.tooltips
+        - navigation.path
+        - content.code.annotate
+        - content.code.copy
+        - content.code.select
