@@ -53,7 +53,7 @@ theme:
 
 # Page tree
 nav:
-  - Introduction: index.md
+  - Home: index.md
   - Getting started:
       - Installation: getting-started.md
   - Slodonix: slodonix/home.md
