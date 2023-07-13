@@ -1,0 +1,64 @@
+site_name: Slodon
+site_description: Slodon framework, ai agent
+site_author: Hadhzy Org
+
+repo_name: Hadhzy/slodon
+repo_url: https://github.com/Hadhzy/slodon
+
+
+theme:
+  name: material
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    # - content.tabs.link
+    - content.tooltips
+    # - header.autohide
+    # - navigation.expand
+    - navigation.footer
+    - navigation.indexes
+    # - navigation.instant
+    # - navigation.prune
+    - navigation.sections
+    - navigation.expand
+    - navigation.tabs
+    - navigation.path
+    - toc.integrate
+    # - navigation.tabs.sticky
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+  - media: '(prefers-color-scheme: light)'
+    scheme: default
+    primary: pink
+    accent: indigo
+    toggle:
+      icon: material/lightbulb
+      name: Switch to dark mode
+  - media: '(prefers-color-scheme: dark)'
+    scheme: slate
+    primary: black
+    accent: amber
+    toggle:
+      icon: material/lightbulb-outline
+      name: Switch to light mode
+
+
+# Page tree
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: getting-started.md
+  - Slodonix: slodonix/home.md
+  - Model: model/home.md
+  - API: API/home.md
+  - SloScrap: SloScrap/home.md
+
+
