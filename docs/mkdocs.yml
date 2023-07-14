@@ -14,6 +14,11 @@ theme:
     - content.action.view
     - content.code.annotate
     - content.code.copy
+    - content.tabs.link
+    - content.tooltips
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
     # - content.tabs.link
     - content.tooltips
     # - header.autohide
@@ -26,7 +31,6 @@ theme:
     - navigation.expand
     - navigation.tabs
     - navigation.path
-    - toc.integrate
     # - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking
@@ -60,5 +64,17 @@ nav:
   - Model: model/home.md
   - API: API/home.md
   - SloScrap: SloScrap/home.md
+  - hadhzy-python-xlib:
+      - hadhzy-xlib/introduction.md
+      - hadhzy-xlib/X-Concepts.md
+      - hadhzy-xlib/user-guide.md
 
 
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

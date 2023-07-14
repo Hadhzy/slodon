@@ -27,7 +27,7 @@ elif _system == 'Linux':
         from slodon.slodonix.slodonix.slodonix_linux_x import *
 
     elif _display_manager() == 'wayland':
-        from slodon.slodonix.slodonix.slodonix_wayland import *
+        from slodon.slodonix.slodonix.slodonix_linux_wayland import *
 
 elif _system == "Darwin":
     from slodon.slodonix.slodonix.slodonix_osx import *
