@@ -15,7 +15,7 @@
 
 <div align="center">
 
-[introduction-beta-pdf](https://github.com/FlurryGlo/slodon/tree/hels15/etc/slodon.pdf)
+[introduction-beta-pdf](https://github.com/FlurryGlo/slodon/tree/hels15/etc/slodon.pdf)(TBD)
 
 </div>
 
@@ -25,6 +25,9 @@
 
 </div>
 
+---
+
+**Documentation**: <a href="https://slodon.io/" target="_blank">https://slodon.io/</a>
 
 # Table of Contents:
 
