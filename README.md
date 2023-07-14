@@ -35,7 +35,7 @@
  - [Sources](#sources)
 
 ## What is slodon?
-Slodon aims to be an AI agent on Linux(first)
+Slodon aims to be an AI agent.
 
 ---
 ## About:
