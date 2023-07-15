@@ -6,7 +6,7 @@ from ctypes import windll as w
 import ctypes
 from typing import Union, Callable, Any, Sequence
 from abc import ABC, abstractmethod
-
+import threading
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
@@ -910,12 +910,20 @@ class DisplayAsParent(Display, ABC):
 
     def __init__(self):
         super().__init__()
-        self._listener()  # initialise the listener
+
+        my_thread = threading.Thread(target=self._listener)  # initialise the listener
+        my_thread.start()
 
     @abstractmethod
     def body(self):
         """
         Every interaction here
+        """
+
+    def trigger_mouse(self, event):
+        """
+        Shows the mouse coordinates
+        event: Position object
         """
 
     def run(self) -> None:
