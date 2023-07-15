@@ -65,9 +65,9 @@ nav:
   - API: API/home.md
   - SloScrap: SloScrap/home.md
   - hadhzy-python-xlib:
-      - hadhzy-xlib/introduction.md
-      - hadhzy-xlib/X-Concepts.md
-      - hadhzy-xlib/user-guide.md
+      - hadhzy-python-xlib/introduction.md
+      - hadhzy-python-xlib/X-Concepts.md
+      - hadhzy-python-xlib/user-guide.md
 
 
 markdown_extensions:
