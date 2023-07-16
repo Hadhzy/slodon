@@ -1,3 +1,3 @@
-### Wayland library implementation in python
+### Python bindings for libwayland
 
 
