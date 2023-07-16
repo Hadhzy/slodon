@@ -28,6 +28,11 @@ elif _system == 'Linux':
 
     elif _display_manager() == 'wayland':
         from slodon.slodonix.slodonix.slodonix_linux_wayland import *
+        from slodon.slodonix.systems.wayland.utils import *
+
+        # create configuration file
+        create_config()
+
 
 elif _system == "Darwin":
     from slodon.slodonix.slodonix.slodonix_osx import *
