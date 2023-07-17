@@ -30,5 +30,5 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 slodon = "slodon.cli.main:start_cli"
-
+manager = "slodon.cli.manager:start_cli"
 
