@@ -7,6 +7,7 @@ from Xlib.ext.xtest import fake_input
 import time
 from typing import Sequence
 from typing import Union, Callable
+
 # This project
 from slodon.slodonix.systems.x.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
@@ -14,6 +15,7 @@ from slodon.slodonix.systems.windows.constants import LEFT, MIDDLE, RIGHT
 from slodon.slodonix.systems.x.structures import Position, SIZE
 from slodon.slodonix.slodonix.tween import linear, getPointOnLine
 from slodon.slodonix.systems.windows.utils import slodonix_check
+from slodon.slodonix.systems.windows.event import Listener
 
 X_TYPE = Union[int, float, None, tuple]
 Y_TYPE = Union[int, float, None]
@@ -26,8 +28,18 @@ MINIMUM_DURATION = 0.1  # 100 ms
 
 _display = Display()  # X-display
 
-BUTTON_NAME_MAPPING = {LEFT: 1, MIDDLE: 2, RIGHT: 3, 1: 1, 2: 2, 3: 3,
-                       4: 4, 5: 5, 6: 6, 7: 7}  # contains all the buttons
+BUTTON_NAME_MAPPING = {
+    LEFT: 1,
+    MIDDLE: 2,
+    RIGHT: 3,
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 4,
+    5: 5,
+    6: 6,
+    7: 7,
+}  # contains all the buttons
 
 
 class Screen:
@@ -76,7 +88,7 @@ class _Interact:
             - with_release: Whether to release the key after pressing it
         ### Returns:
             - None
-          """
+        """
 
         if key_map[key] is None:
             return
@@ -88,19 +100,21 @@ class _Interact:
 
         needs_shift = is_shift_character(key)
         if needs_shift:
-            fake_input(_display, X.KeyPress, key_map['shift'])
+            fake_input(_display, X.KeyPress, key_map["shift"])
 
         fake_input(_display, X.KeyPress, key_map[key])
 
         if needs_shift:
-            fake_input(_display, X.KeyRelease, key_map['shift'])
+            fake_input(_display, X.KeyRelease, key_map["shift"])
         _display.sync()
 
         if with_release:
             self.key_up(key)
 
     # noinspection PyMethodMayBeStatic
-    def moveto(self, x: int | None, y: int | None, x_offset, y_offset, duration, tween=linear) -> None:
+    def moveto(
+        self, x: int | None, y: int | None, x_offset, y_offset, duration: int | float = 0, tween=linear
+    ) -> None:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L100
         ### Arguments:
@@ -146,8 +160,8 @@ class _Interact:
                 sleep_amount = MINIMUM_SLEEP
 
             steps = [
-                getPointOnLine(start_x, start_y, x, y, tween(n / num_steps)) for n in range(num_steps)
-
+                getPointOnLine(start_x, start_y, x, y, tween(n / num_steps))
+                for n in range(num_steps)
             ]
 
             steps.append((x, y))
@@ -167,7 +181,9 @@ class _Interact:
         fake_input(_display, X.MotionNotify, x=x, y=y)
         _display.sync()
 
-    def mouse_down(self, x: int, y: int, button: str | int, with_release: bool = False) -> None:
+    def mouse_down(
+        self, x: int, y: int, button: str | int, with_release: bool = False
+    ) -> None:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L105
         ### Arguments:
@@ -232,10 +248,16 @@ class _Interact:
         """
         pass
 
-    def on_screen(self):
+    def on_screen(self, x, y=None):
+        """
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L789
+        Returns True if the given x and y coordinates are on the screen.
         """
 
-        """
+        if y is None:
+            x, y = x
+
+        return 0 <= x <= self.info.size().cx and 0 <= y <= self.info.size().cy
 
         pass
 
@@ -347,13 +369,16 @@ class _Info:
         ### Returns:
             (width, height) tuple of the size.
         """
-        return SIZE(_display.screen().width_in_pixels, _display.screen().height_in_pixels)
+        return SIZE(
+            _display.screen().width_in_pixels, _display.screen().height_in_pixels
+        )
 
 
 class Display:
     """
     Represents a basic display
     """
+
     def __init__(self):
         self.info = _Info()
         self._interact = _Interact(self.info)
@@ -396,7 +421,7 @@ class Display:
 
         for i in range(presses):
             for k in keys:
-                self.key_down(k, with_release=True)
+                self._interact.key_down(k, with_release=True)
             time.sleep(interval)
 
     @slodonix_check(instance=_Info())
@@ -433,7 +458,7 @@ class Display:
             if len(char) > 1:
                 char.lower()
 
-            self.key_down(char, with_release=True)
+            self._interact.key_down(char, with_release=True)
             time.sleep(interval)
 
     @slodonix_check(instance=_Info())
@@ -471,42 +496,44 @@ class Display:
 
     @slodonix_check(instance=_Info())
     def move_to(
-            self,
-            x: X_TYPE = None,
-            y: Y_TYPE = None,
-            duration: DURATION_TYPE = 0.0,
-            tween: TWEEN_TYPE = linear,
-            _pause=True,
+        self,
+        x: X_TYPE = None,
+        y: Y_TYPE = None,
+        duration: DURATION_TYPE = 0.0,
+        tween: TWEEN_TYPE = linear,
+        _pause=True,
     ):
         """
-           Moves the mouse cursor to a point on the screen.
+        Moves the mouse cursor to a point on the screen.
 
-           The x and y parameters detail where the mouse event happens. If None, the
-           current mouse position is used. If a float value, it is rounded down. If
-           outside the boundaries of the screen, the event happens at edge of the
-           screen.
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
 
-           ### Arguments:
-               - x (int): The x position on the screen where the
-                   click happens. None by default. If tuple, this is used for x and y.
+        ### Arguments:
+            - x (int): The x position on the screen where the
+                click happens. None by default. If tuple, this is used for x and y.
 
-               - y (int): : The y position on the screen where the
-                           click happens. None by default.
+            - y (int): : The y position on the screen where the
+                        click happens. None by default.
 
-               - duration (float): The number of seconds to perform the mouse move to the x,y coordinates.
-                   0, then the mouse cursor is moved
-                   instantaneously. 0.0 by default.
+            - duration (float): The number of seconds to perform the mouse move to the x,y coordinates.
+                0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
 
-               - tween (func, optional): The tweening function used if the duration is not
-               0. A linear tween is used by default.
+            - tween (func, optional): The tweening function used if the duration is not
+            0. A linear tween is used by default.
 
-               ### Returns:
-                   None
-               """
+            ### Returns:
+                None
+        """
         self._interact.moveto(x, y, 0, 0, duration=duration, tween=tween)
 
     @slodonix_check(instance=_Info())
-    def mouse_down(self, x=None, y=None, button=None, tween=linear, with_release=True) -> None:
+    def mouse_down(
+        self, x=None, y=None, button=None, tween=linear, with_release=True
+    ) -> None:
         """
          Performs pressing a mouse button down(but not up).
 
@@ -528,8 +555,8 @@ class Display:
             -None
         """
 
-        self.move_to(x, y, x_offset=0, y_offset=0, tween=tween)
-        self.mouse_down(x, y, button, with_release=with_release)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, tween=tween)
+        self._interact.mouse_down(x, y, button, with_release=with_release)
 
     @slodonix_check(instance=_Info())
     def mouse_up(self, x=None, y=None, button=None, tween=linear) -> None:
@@ -551,8 +578,8 @@ class Display:
         ### Returns:
            None
         """
-        self.move_to(x, y, x_offset=0, y_offset=0, tween=tween)
-        self.mouse_up(x, y, button)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, tween=tween)
+        self._interact.mouse_up(x, y, button)
 
     @slodonix_check(instance=_Info())
     def on_screen(self, x: int | Position, y: int = None) -> bool:
@@ -569,52 +596,162 @@ class Display:
         if isinstance(x, Position):
             x, y = x.x, x.y
 
-        return self.on_screen(x, y)
+        return self._interact.on_screen(x, y)
 
     @slodonix_check(instance=_Info())
-    def move_rel(self) -> None:
+    def move_rel(
+        self, x_offset=None, y_offset=None, duration=0.0, tween=linear
+    ) -> None:
         """
+        Moves the mouse cursor to a point on the screen, relative to its current
+        position.
         ### Arguments:
+            - x_offset (int, optional): The x offset relative to the current mouse position.
+            - y_offset (int, optional): The y offset relative to the current mouse position.
+            - duration (float, optional): The number of seconds to perform the mouse move to the x,y coordinates.
+                0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+            - tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default.
         ### Returns:
+              - None
         """
+        self._interact.moveto(
+            None,
+            None,
+            x_offset=x_offset,
+            y_offset=y_offset,
+            duration=duration,
+            tween=tween,
+        )
 
     @slodonix_check(instance=_Info())
-    def drag_to(self) -> None:
+    def drag_to(self, x=None, y=None, duration=0.0, tween=linear, button=None) -> None:
         """
+        Performs a mouse drag (mouse movement while a button is held down) to a
+        point on the screen.
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
         ### Arguments:
+            x (int, float, None, tuple, optional): How far left (for negative values) or
+                right (for positive values) to move the cursor. 0 by default. If tuple, this is used for x and y.
+                If x is a str, it's considered a filename of an image to find on
+                the screen with locateOnScreen() and click the center of.
+            y (int, float, None, optional): How far up (for negative values) or
+                down (for positive values) to move the cursor. 0 by default.
+                duration (float, optional): The amount of time it takes to move the mouse
+                cursor to the new xy coordinates. If 0, then the mouse cursor is moved
+                instantaneously. 0.0 by default.
+            tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default.
+            button (str, int, optional): The mouse button released.
         ### Returns:
+             -None
         """
+        self._interact.mouse_down(x=x, y=y, button=button, with_release=False)
+        self._interact.moveto(x=x, y=y, x_offset=0, y_offset=0, duration=duration, tween=tween)
+        self._interact.mouse_up(x=x, y=y, button=button)
 
     @slodonix_check(instance=_Info())
-    def drag_rel(self) -> None:
+    def drag_rel(self, x=None, y=None, duration=0.0, tween=linear, button=None) -> None:
         """
+        Performs a mouse drag (mouse movement while a button is held down) to a
+        point on the screen(relative).
+
+        The x and y parameters detail where the mouse event happens. If None, the
+         current mouse position is used. If a float value, it is rounded down. If
+         outside the boundaries of the screen, the event happens at edge of the
+         screen.
         ### Arguments:
+            x (int, float, None, tuple, optional): How far left (for negative values) or
+                right (for positive values) to move the cursor. 0 by default. If tuple, this is used for x and y.
+                If x is a str, it's considered a filename of an image to find on
+                the screen with locateOnScreen() and click the center of.
+            y (int, float, None, optional): How far up (for negative values) or
+            tween (func, optional): The tweening function used if the duration is not
+                0. A linear tween is used by default.
+            button (str, int, optional): The mouse button released.
+
         ### Returns:
-
+            -None
         """
+
+        self._interact.mouse_down(x=x, y=y, button=button, with_release=False)
+        self._interact.moveto(
+            None, None, x, y, duration=duration, tween=tween
+        )  # only pass in the offset
+        self._interact.mouse_up(x=x, y=y, button=button)
 
     @slodonix_check(instance=_Info())
-    def scroll(self) -> None:
+    def scroll(self, clicks, x=None, y=None) -> None:
         """
+        Performs a scrool of the mouse scrool wheel
+
+        Whether this is a vertical or horizontal scroll depends on the underlying
+        operating system.
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
         ### Arguments:
+            - clicks (int): The number of scroll units.
+            - x (int, float, None, optional): The x position on the screen.
+            - y (int, float, None, optional): The y position on the screen.
+
         ### Returns:
-
+            - None
         """
+
+        if type(x) in (tuple, list):
+            x, y = x[0], x[1]
+
+        self._interact.scrool(clicks, x, y)
 
     @slodonix_check(instance=_Info())
-    def hscrool(self) -> None:
+    def hscrool(self, clicks, x=None, y=None) -> None:
         """
+        Performs a scrool of the mouse scrool wheel(horizontal)
+
+        Whether this is a vertical or horizontal scroll depends on the underlying
+        operating system.
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
         ### Arguments:
+            - clicks (int): The number of scroll units.
+            - x (int, float, None, optional): The x position on the screen.
+            - y (int, float, None, optional): The y position on the screen.
+
         ### Returns:
+            - None
 
         """
+
+        if type(x) in (tuple, list):
+            x, y = x[0], x[1]
+
+        self._interact.scrool(clicks, x, y)
 
     @slodonix_check(instance=_Info())
-    def hot_key(self) -> None:
+    def hot_key(self, *args, **kwargs) -> None:
         """
+        Presses hotkey combination.
         ### Arguments:
+             *args (str): The hotkey combination to press.
+             **kwargs (dict): The hotkey combination to press.
         ### Returns
+           - None
         """
+
+        self._interact.hot_key(*args, **kwargs)
 
 
 class DisplayContext(Display, ABC):
@@ -634,26 +771,43 @@ class DisplayAsParent(Display, ABC):
 
     TBD
     """
+
     def __init__(self):
         super().__init__()
+        self.listener = Listener(_Info())
+
+    def _add_listeners(self):
+        if hasattr(self, "trigger_mouse"):
+            self.listener.add_listener("mouse", "trigger_mouse", self)
 
     @abstractmethod
-    def body(self):
+    def body(self) -> None:
         """
         Every interaction here
         """
-    def trigger_mouse(self, event):
 
+    def trigger_mouse(self, event):
         """
         Shows the mouse coordinates
         event: Position object
         """
 
     def run(self) -> None:
-        return self.body()
+        """
+        Run the main body of the program.
+        Starts event listeners if any.
+        """
+        self._add_listeners()
 
-    def _listener(self):
-        pass
+        try:
+
+            self.body()  # run the main body
+
+            Listener.destroy_threads()  # destroy event listeners
+
+        except Exception as e:
+            Listener.destroy_threads()  # destroy event listeners
+            raise e
 
 
 def get_os() -> str:

@@ -6,7 +6,7 @@ from ctypes import windll as w
 import ctypes
 from typing import Union, Callable, Any, Sequence
 from abc import ABC, abstractmethod
-import threading
+
 # This project
 from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
@@ -198,7 +198,7 @@ class _Interact:
         w.user32.SetCursorPos(x, y)
 
     # noinspection PyMethodMayBeStatic
-    def mouse_down(self, x=None, y=None, button=PRIMARY, with_release=False) -> None:
+    def mouse_down(self, x=None, y=None, button=LEFT, with_release=False) -> None:
         """
         - https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mouse_event
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L375-L401
@@ -277,14 +277,14 @@ class _Interact:
             pass
 
     # noinspection PyMethodMayBeStatic
-    def click(self, x, y, button, clicks=None) -> None:
+    def click(self, x=None, y=None, button=LEFT, clicks=None) -> None:
         """
         - https://learn.microsoft.com/en-us/windows/win32/learnwin32/mouse-clicks
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L432-L458
         ### Arguments
             - x (int): The x position of the mouse event.
             - y (int): The y position of the mouse event.
-            - button (str): The mouse button, either 'left', 'middle', or 'right'
+            - button (str): The mouse button, either 'left', 'middle', or 'right' or 'scrool'
             - clicks (int): The number of clicks to send
         ### Returns
             - None
@@ -315,7 +315,6 @@ class _Interact:
             if clicks is not None:
                 for i in range(clicks):
                     send_mouse_event(ev_click, x, y, instance=_Info())
-
             send_mouse_event(ev_click, x, y, instance=_Info())
 
         except (PermissionError, OSError):
@@ -344,39 +343,46 @@ class _Interact:
 
     def scrool(self, clicks, x=None, y=None):
         """
-        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L68
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L507
         """
-        return self.vscrool(clicks, x, y)
+        _pos = self.info.position()
+        _size = self.info.size()
+        startx, starty = _pos.x, _pos.y
+        width, height = _size.cx, _size.cy
+
+        if x is None:
+            x = startx
+        else:
+            if x < 0:
+                x = 0
+            elif x >= width:
+                x = width - 1
+        if y is None:
+            y = starty
+        else:
+            if y < 0:
+                y = 0
+            elif y >= height:
+                y = height - 1
+
+        try:
+            send_mouse_event(MOUSEEVENTF_WHEEL, x, y, instance=_Info(), dw_data=clicks)
+        except (PermissionError, OSError):
+            pass
 
     def hscrool(self, clicks, x=None, y=None):
         """
-        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L55
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L544
         """
-        clicks = int(clicks)
-        if clicks == 0:
-            return
-        elif clicks > 0:
-            button = 7  # scroll right
-        else:
-            button = 6  # scroll left
 
-        for i in range(abs(clicks)):
-            self.click(x, y, button=button)
+        return self.scrool(clicks, x, y)
 
     def vscrool(self, clicks, x=None, y=None):
         """
-        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L42
+        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L560
         """
-        clicks = int(clicks)
-        if clicks == 0:
-            return
-        elif clicks > 0:
-            button = 4  # scroll up
-        else:
-            button = 5  # scroll down
 
-        for i in range(abs(clicks)):
-            self.click(x, y, button=button)
+        return self.scrool(clicks, x, y)
 
     def hot_key(self, *args, **kwargs):
         """
@@ -466,13 +472,13 @@ class Display:
         )  # SHOULD BE NOT USED DIRECTLY OUTSIDE THE CLASS
 
     @slodonix_check(instance=_Info())
-    def click(self, x, y, button, clicks: int) -> None:
+    def click(self, x=None, y=None, button=LEFT, clicks: int = 1) -> None:
         """
         Click at the specified coordinates.
 
         left | middle | right
         """
-        self._interact.click(x, y, button, clicks)
+        self._interact.click(x=x, y=y, button=button, clicks=clicks)
 
     @slodonix_check(instance=_Info())
     def press(self, keys: str | list, presses=1, interval=0.0) -> None:
@@ -501,9 +507,10 @@ class Display:
                     lower_keys.append(s)
             keys = lower_keys
         interval = float(interval)
+
         for i in range(presses):
             for k in keys:
-                self.key_down(k)
+                self._interact.key_down(k)
             time.sleep(interval)
 
     @slodonix_check(instance=_Info())
@@ -563,7 +570,7 @@ class Display:
         self._interact.key_up(key)
 
     @slodonix_check(instance=_Info())
-    def key_down(self, key, _pause=True, with_release=True) -> None:
+    def key_down(self, key, with_release=True) -> None:
         """
         Performs a keyboard key press down (without the release afterwards).
 
@@ -573,7 +580,6 @@ class Display:
         ### Returns:
             - None
         """
-
         if len(key) > 1:
             key = key.lower()
 
@@ -586,7 +592,6 @@ class Display:
         y: Y_TYPE = None,
         duration: DURATION_TYPE = 0.0,
         tween: TWEEN_TYPE = linear,
-        _pause=True,
     ):
         """
         Moves the mouse cursor to a point on the screen.
@@ -622,7 +627,7 @@ class Display:
         self,
         x=None,
         y=None,
-        button=PRIMARY,
+        button=LEFT,
         tween=linear,
         _pause=True,
         with_release=True,
@@ -650,8 +655,8 @@ class Display:
         """
 
         # move the mouse to the x, y coordinates
-        self.move_to(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
-        self.mouse_down(
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self._interact.mouse_down(
             x, y, button, with_release=with_release
         )  # press the button
 
@@ -683,8 +688,8 @@ class Display:
         Returns:
           None
         """
-        self.move_to(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
-        self.mouse_up(x, y, button)  # release the button
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self._interact.mouse_up(x, y, button)  # release the button
 
     @slodonix_check(instance=_Info())
     def on_screen(self, x: int | Position, y: int = None) -> bool:
@@ -737,9 +742,7 @@ class Display:
         )
 
     @slodonix_check(instance=_Info())
-    def drag_to(
-        self, x=None, y=None, duration=0.0, tween=linear, button=PRIMARY
-    ) -> None:
+    def drag_to(self, x=None, y=None, duration=0.0, tween=linear, button=LEFT) -> None:
         """
         Performs a mouse drag (mouse movement while a button is held down) to a
         point on the screen.
@@ -771,15 +774,13 @@ class Display:
         """
 
         self._interact.mouse_down(
-            button=button, with_release=False
+            x=x, y=y, button=button, with_release=False
         )  # not release automatically
         self._interact.moveto(x, y, None, None, duration=duration, tween=tween)
-        self._interact.mouse_up(button=button)
+        self._interact.mouse_up(x=x, y=y, button=button)
 
     @slodonix_check(instance=_Info())
-    def drag_rel(
-        self, x=None, y=None, duration=0.0, tween=linear, button=PRIMARY
-    ) -> None:
+    def drag_rel(self, x=None, y=None, duration=0.0, tween=linear, button=LEFT) -> None:
         """
          Performs a mouse drag (mouse movement while a button is held down) to a
          point on the screen(relative).
@@ -807,11 +808,11 @@ class Display:
             ### Returns
              - None
         """
-        self._interact.mouse_down(button=button, with_release=False)
+        self._interact.mouse_down(x=x, y=y, button=button, with_release=False)
         self._interact.moveto(
             None, None, x, y, duration=duration, tween=tween
         )  # only pass in the offset
-        self._interact.mouse_up(button=button)
+        self._interact.mouse_up(x=x, y=y, button=button)
 
     @slodonix_check(instance=_Info())
     def scrool(self, clicks, x=None, y=None):
@@ -923,7 +924,6 @@ class DisplayAsParent(Display, ABC):
         self._add_listeners()  # add event listeners
 
         try:
-
             self.body()  # run the main body
 
             Listener.destroy_threads()  # destroy event listeners
