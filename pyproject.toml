@@ -21,14 +21,10 @@ mypy = "^1.3.0"
 mkdocs-material = "9.1.18"
 
 
-[tool.poetry.extras]
-wayland = ["cffi"]
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 slodon = "slodon.cli.main:start_cli"
-manager = "slodon.cli.manager:start_cli"
 

@@ -43,7 +43,9 @@ class Screen:
 
 
 class _Interact:
-    """ """
+    """
+    Base class for all interaction functions
+    """
 
     def __init__(self, info) -> None:
         self.info = info
@@ -55,7 +57,7 @@ class _Interact:
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L295-L332
 
         ### Arguments
-            - key (str): The key(FROM UTILS.KEY_NAMES) to release
+            - key (str): The key(from key_map) to release
         ### Returns
             - None
         """
@@ -455,7 +457,6 @@ class _Info:
 class Display:
     """
     Represents a basic display, which is the starting point.
-    Acts as a context manager.
     """
 
     def __init__(self):
@@ -474,7 +475,7 @@ class Display:
         self._interact.click(x, y, button, clicks)
 
     @slodonix_check(instance=_Info())
-    def press(self, keys, presses=1, interval=0.0) -> None:
+    def press(self, keys: str | list, presses=1, interval=0.0) -> None:
         """
         Performs a keyboard key press down, followed by a release.
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L1581
@@ -545,7 +546,7 @@ class Display:
             time.sleep(interval)
 
     @slodonix_check(instance=_Info())
-    def key_up(self, key, _pause=True) -> None:
+    def key_up(self, key) -> None:
         """
         Performs a keyboard key release  (without the press down beforehand).
 
@@ -904,39 +905,38 @@ class DisplayContext(Display):
 class DisplayAsParent(Display, ABC):
     """
     Use the display class as a parent for other classes.
-
-    TBD
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
+        self.listener = Listener(_Info())  # initialise the listener
 
-        my_thread = threading.Thread(target=self._listener)  # initialise the listener
-        my_thread.start()
+    def _add_listeners(self) -> None:
+        if hasattr(self, "trigger_mouse"):
+            self.listener.add_listener("mouse", "trigger_mouse", self)
 
     @abstractmethod
-    def body(self):
+    def body(self) -> None:
         """
         Every interaction here
         """
 
-    def trigger_mouse(self, event):
-        """
-        Shows the mouse coordinates
-        event: Position object
-        """
-
     def run(self) -> None:
         """
-        Execute the body
+        Run the main body of the program.
+        Starts event listeners if any.
         """
-        return self.body()
+        self._add_listeners()  # add event listeners
 
-    # noinspection PyMethodMayBeStatic
-    def _listener(self):
-        _obj = Listener(_Info())  # pass in the Info
+        try:
 
-        _obj.add_listener("mouse", "trigger_mouse", self)
+            self.body()  # run the main body
+
+            Listener.destroy_threads()  # destroy event listeners
+
+        except Exception as e:
+            Listener.destroy_threads()  # destroy event listeners
+            raise e
 
 
 def get_os() -> str:
