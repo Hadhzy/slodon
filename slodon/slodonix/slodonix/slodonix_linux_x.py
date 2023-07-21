@@ -8,7 +8,7 @@ import time
 from typing import Sequence
 from typing import Union, Callable
 # This project
-from slodon.slodonix.systems.windows.keyboard_map import full_map as key_map
+from slodon.slodonix.systems.x.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.constants import LEFT, MIDDLE, RIGHT
 from slodon.slodonix.systems.x.structures import Position, SIZE
@@ -506,28 +506,70 @@ class Display:
         self._interact.moveto(x, y, 0, 0, duration=duration, tween=tween)
 
     @slodonix_check(instance=_Info())
-    def mouse_down(self) -> None:
+    def mouse_down(self, x=None, y=None, button=None, tween=linear, with_release=True) -> None:
         """
+         Performs pressing a mouse button down(but not up).
+
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
+
         ### Arguments:
+             x (int, float, None, tuple, optional): The x position on the screen where the
+                mouse down happens. None by default. If tuple, this is used for x and y.
+                If x is a str, it's considered a filename of an image to find on
+                the screen with locateOnScreen() and click the center of.
+            y (int, float, None, optional): The y position on the screen where the
+                mouse down happens. None by default.
 
+            button (str, int, optional): The mouse button pressed down.
         ### Returns:
-
+            -None
         """
+
+        self.move_to(x, y, x_offset=0, y_offset=0, tween=tween)
+        self.mouse_down(x, y, button, with_release=with_release)
 
     @slodonix_check(instance=_Info())
-    def mouse_up(self) -> None:
+    def mouse_up(self, x=None, y=None, button=None, tween=linear) -> None:
         """
+        Performs releasing a mouse button up (but not down beforehand).
+        The x and y parameters detail where the mouse event happens. If None, the
+        current mouse position is used. If a float value, it is rounded down. If
+        outside the boundaries of the screen, the event happens at edge of the
+        screen.
         ### Arguments:
-        ### Returns:
+                x (int, float, None, tuple, optional): The x position on the screen where the
+                    mouse down happens. None by default. If tuple, this is used for x and y.
+                    If x is a str, it's considered a filename of an image to find on
+                    the screen with locateOnScreen() and click the center of.
+                y (int, float, None, optional): The y position on the screen where the
+                    mouse down happens. None by default.
 
+                button (str, int, optional): The mouse button pressed down.
+        ### Returns:
+           None
         """
+        self.move_to(x, y, x_offset=0, y_offset=0, tween=tween)
+        self.mouse_up(x, y, button)
 
     @slodonix_check(instance=_Info())
-    def on_screen(self) -> None:
+    def on_screen(self, x: int | Position, y: int = None) -> bool:
         """
+         Returns True if the given x and y coordinates are on the screen.
         ### Arguments:
+            - x (int, tuple, Position): The x position on the screen.
+            - y (int, optional): The y position on the screen.
         ### Returns:
+            - bool: True if the x and y coordinates are on the screen.
+        ### Raises:
+            - TypeError: If the given x or y coordinates are not integers.
         """
+        if isinstance(x, Position):
+            x, y = x.x, x.y
+
+        return self.on_screen(x, y)
 
     @slodonix_check(instance=_Info())
     def move_rel(self) -> None:

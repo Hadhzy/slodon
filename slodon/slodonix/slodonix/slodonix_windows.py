@@ -647,14 +647,11 @@ class Display:
 
         ### Returns:
             - None
-
-        Raises:
-            SlodonixException: If button is not one of 'left', 'middle', 'right', 1, 2, or 3
         """
 
         # move the mouse to the x, y coordinates
-        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
-        self._interact.mouse_down(
+        self.move_to(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self.mouse_down(
             x, y, button, with_release=with_release
         )  # press the button
 
@@ -685,12 +682,9 @@ class Display:
 
         Returns:
           None
-
-        Raises:
-            PyAutoGUIException: If button is not one of 'left', 'middle', 'right', 1, 2, or 3
         """
-        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
-        self._interact.mouse_up(x, y, button)  # release the button
+        self.move_to(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self.mouse_up(x, y, button)  # release the button
 
     @slodonix_check(instance=_Info())
     def on_screen(self, x: int | Position, y: int = None) -> bool:
