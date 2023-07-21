@@ -8,11 +8,50 @@ if TYPE_CHECKING:
     from slodon.slodonix.slodonix.slodonix_windows import DisplayAsParent
 
 
-class Listener:
+class SlodonixThread(threading.Thread):
+    """
+    Represents a single thread in the system.
+    """
+    def __init__(self):
+        super().__init__()
+        self.listen_to = None
+        self.stop_event = threading.Event()
 
+    def run(self):
+        """
+        trigger when "thread.start()" is called.
+        """
+        while not self.stop_event.is_set():
+            self.listen_to()
+
+
+class DetectMouse(SlodonixThread):
     """
-    https://learn.microsoft.com/en-us/windows/win32/winmsg/hooks
+    Thread to detect mouse movement.
     """
+    def __init__(self, obj, method, info):
+        super().__init__()
+        self.obj = obj
+        self.method = method
+        self.listen_to = self.detect_mouse
+        self.info = info
+
+    def detect_mouse(self):
+        prev_pos = self.info.position()
+        while not self.stop_event.is_set():
+            curr_pos = self.info.position()
+            if prev_pos != curr_pos:
+                _method = getattr(self.obj, self.method)  # get the method based on the name
+                _method(curr_pos)  # position has been changed call with the new one
+            prev_pos = curr_pos
+
+
+class Listener:
+    """
+    Listen to different events.
+    Handling threads.
+    """
+    THREADS = []
 
     def __init__(self, _instance: "_Info") -> None:
         super().__init__()
@@ -32,19 +71,20 @@ class Listener:
 
         match _type:
             case "mouse":  # In case of mouse event
-                movement_thread = threading.Thread(target=self._detect_mouse(method, obj))  # create a thread
-                movement_thread.start()  # start the thread
+                movement_thread = DetectMouse(obj, method, self.info)
+                movement_thread.start()
+                self.THREADS.append(movement_thread)  # add the thread to the list
             case "key_pressed":
                 pass
 
-    def _detect_mouse(self, method: callable, obj):
-        prev_pos = self.info.position()
-        while True:
-            curr_pos = self.info.position()
-            if prev_pos != curr_pos:
-                _method = getattr(obj, method)  # get the method based on the name
-                _method(curr_pos)  # position has been changed call with the new one
-            prev_pos = curr_pos
+    @classmethod
+    def destroy_threads(cls):
+        """
+        Destroy all threads.
+        """
+        for thread in cls.THREADS:
+            thread.stop_event.set()
+            thread.join()
 
 
 @dataclasses.dataclass
