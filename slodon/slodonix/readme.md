@@ -3,6 +3,4 @@ To handle this, we utilize a sub-library which effectively manages all the neces
 Thus, we develop the `slodonix` library.
 
 ---
-The active development is in the [slodon/slodonix](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix), the mirror: [real-time mirror for maintaining purposes](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix) -
-
-The corresponding [MIRO TABLE](https://miro.com/app/board/uXjVMCWiS68=/?share_link_id=600250455221)
+The active development is in the [slodon/slodonix](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix)
