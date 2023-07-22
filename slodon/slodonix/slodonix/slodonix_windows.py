@@ -510,7 +510,7 @@ class Display:
 
         for i in range(presses):
             for k in keys:
-                self._interact.key_down(k)
+                self._interact.key_down(k, with_release=True)
             time.sleep(interval)
 
     @slodonix_check(instance=_Info())

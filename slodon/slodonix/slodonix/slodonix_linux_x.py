@@ -13,7 +13,7 @@ from slodon.slodonix.systems.x.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.constants import LEFT, MIDDLE, RIGHT
 from slodon.slodonix.systems.x.structures import Position, SIZE
-from slodon.slodonix.slodonix.tween import linear, getPointOnLine
+from slodon.slodonix.slodonix.tween import linear
 from slodon.slodonix.systems.windows.utils import slodonix_check
 from slodon.slodonix.systems.windows.event import Listener
 
@@ -113,7 +113,7 @@ class _Interact:
 
     # noinspection PyMethodMayBeStatic
     def moveto(
-        self, x: int | None, y: int | None, x_offset, y_offset, duration: int | float = 0, tween=linear
+        self, x: int | None, y: int | None, x_offset=None, y_offset=None, duration: int | float = 0, tween=linear
     ) -> None:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L100
@@ -128,55 +128,55 @@ class _Interact:
         ### Returns:
             - None
         """
-        x_offset = int(x_offset) if x_offset is not None else 0
-        y_offset = int(y_offset) if y_offset is not None else 0
-
-        if x is None and y is None and x_offset == 0 and y_offset == 0:
-            return  # Special case for no mouse movement at all.
-
-        _position = self.info.position()
-        start_x, start_y = _position.x, _position.y
-
-        x = int(x) if x is not None else start_x
-        y = int(y) if y is not None else start_y
-
-        x += x_offset
-        y += y_offset
-
-        _size = self.info.size()
-
-        width, height = _size.cx, _size.cy
-
-        steps = [(x, y)]
-
-        sleep_amount = MINIMUM_SLEEP
-
-        if duration > MINIMUM_DURATION:
-            num_steps = max(width, height)
-            sleep_amount = duration / num_steps
-
-            if sleep_amount < MINIMUM_SLEEP:
-                num_steps = int(duration / MINIMUM_SLEEP)
-                sleep_amount = MINIMUM_SLEEP
-
-            steps = [
-                getPointOnLine(start_x, start_y, x, y, tween(n / num_steps))
-                for n in range(num_steps)
-            ]
-
-            steps.append((x, y))
-
-        for tween_x, tween_y in steps:
-            if len(steps) > 1:
-                time.sleep(sleep_amount)
-
-            tween_x = int(round(tween_x))
-            tween_y = int(round(tween_y))
-
-            if (tween_x, tween_y) not in FAILSAFE_POINTS:
-                fail_safe_check(instance=self.info)
-
-            fake_input(_display, X.MotionNotify, x=tween_x, y=tween_y)
+        # x_offset = int(x_offset) if x_offset is not None else 0
+        # y_offset = int(y_offset) if y_offset is not None else 0
+        #
+        # if x is None and y is None and x_offset == 0 and y_offset == 0:
+        #     return  # Special case for no mouse movement at all.
+        #
+        # _position = self.info.position()
+        # start_x, start_y = _position.x, _position.y
+        #
+        # x = int(x) if x is not None else start_x
+        # y = int(y) if y is not None else start_y
+        #
+        # x += x_offset
+        # y += y_offset
+        #
+        # _size = self.info.size()
+        #
+        # width, height = _size.cx, _size.cy
+        #
+        # steps = [(x, y)]
+        #
+        # sleep_amount = MINIMUM_SLEEP
+        #
+        # if duration > MINIMUM_DURATION:
+        #     num_steps = max(width, height)
+        #     sleep_amount = duration / num_steps
+        #
+        #     if sleep_amount < MINIMUM_SLEEP:
+        #         num_steps = int(duration / MINIMUM_SLEEP)
+        #         sleep_amount = MINIMUM_SLEEP
+        #
+        #     steps = [
+        #         getPointOnLine(start_x, start_y, x, y, tween(n / num_steps))
+        #         for n in range(num_steps)
+        #     ]
+        #
+        #     steps.append((x, y))
+        #
+        # for tween_x, tween_y in steps:
+        #     if len(steps) > 1:
+        #         time.sleep(sleep_amount)
+        #
+        #     tween_x = int(round(tween_x))
+        #     tween_y = int(round(tween_y))
+        #
+        #     if (tween_x, tween_y) not in FAILSAFE_POINTS:
+        #         fail_safe_check(instance=self.info)
+        #
+        #     fake_input(_display, X.MotionNotify, x=tween_x, y=tween_y)
 
         fake_input(_display, X.MotionNotify, x=x, y=y)
         _display.sync()
@@ -194,8 +194,9 @@ class _Interact:
         ### Returns:
             - None
         """
+        assert button in BUTTON_NAME_MAPPING.keys()
 
-        self.moveto(x, y, 0, 0, 0)
+        self.moveto(x, y)
         fake_input(_display, X.ButtonPress, BUTTON_NAME_MAPPING[button])
         _display.sync()
 
@@ -212,35 +213,20 @@ class _Interact:
         ### Returns:
              - None
         """
-        self.moveto(x, y, 0, 0, 0)
+        assert button in BUTTON_NAME_MAPPING.keys()
+        self.moveto(x, y)
         fake_input(_display, X.ButtonRelease, BUTTON_NAME_MAPPING[button])
         _display.sync()
 
     def click(self, x, y, button, clicks=None) -> None:
-        """
-        - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L72
-        ### Arguments:
-            - x: The x coordinate to move to
-            - y: The y coordinate to move to
-            - button: The button to press
-        ### Returns:
-              - None
-        """
+        assert button in BUTTON_NAME_MAPPING.keys()
         button = BUTTON_NAME_MAPPING[button]
 
-        if x is None:
-            x = self.info.position().x
-        if y is None:
-            y = self.info.position().y
-        try:
-            if clicks is not None:
-                for i in range(clicks):
-                    self.mouse_down(x, y, button, with_release=True)
-            else:
-                self.mouse_down(x, y, button, with_release=True)
-
-        except Exception as e:
-            raise e
+        if clicks is None:
+            self.mouse_down(x, y, button)
+        else:
+            for _ in range(clicks):
+                self.mouse_down(x, y, button)
 
     def mouse_is_swapped(self):
         """
@@ -264,6 +250,7 @@ class _Interact:
     def scrool(self, clicks, x=None, y=None) -> None:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L68
+        . automatically calls vscrool or hscrool
         """
         return self.vscrool(clicks, x, y)
 
