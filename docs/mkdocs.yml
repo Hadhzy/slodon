@@ -68,7 +68,8 @@ nav:
       - hadhzy-python-xlib/introduction.md
       - hadhzy-python-xlib/X-Concepts.md
       - hadhzy-python-xlib/user-guide.md
-
+  - hzy:
+    - hzy/introduction.md
 
 markdown_extensions:
   - pymdownx.highlight:
