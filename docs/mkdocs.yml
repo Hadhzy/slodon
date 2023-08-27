@@ -70,6 +70,9 @@ nav:
       - hadhzy-python-xlib/user-guide.md
   - hzy:
     - hzy/introduction.md
+    
+  - developer-guide:
+    -developer-guide/developer-guide.md
 
 markdown_extensions:
   - pymdownx.highlight:
