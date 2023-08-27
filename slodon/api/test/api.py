@@ -7,5 +7,3 @@ async def task1():
 
 async def task2():
     pass
-
-

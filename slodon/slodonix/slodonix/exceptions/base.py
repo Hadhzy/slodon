@@ -1,4 +1,4 @@
-__all__ = ['SlodonixException']
+__all__ = ["SlodonixException"]
 
 
 class SlodonixException(Exception):

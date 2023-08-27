@@ -17,7 +17,7 @@ from slodon.slodonix.systems.windows.event import Listener
 
 __all__ = ["Display", "get_os", "DisplayContext", "DisplayAsParent"]
 
-ev = MOUSEEVENTF_LEFTDOWN  
+ev = MOUSEEVENTF_LEFTDOWN
 ev_up = MOUSEEVENTF_LEFTUP
 ev_click = MOUSEEVENTF_LEFTCLICK
 
@@ -54,7 +54,7 @@ class _Interact:
     def key_up(self, key: str) -> None:
         """
         Performs a keyboard key release  (without the press down beforehand).
-        
+
         - https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup#parameters
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L295-L332
 

@@ -12,6 +12,7 @@ class SlodonixThread(threading.Thread):
     """
     Represents a single thread in the system.
     """
+
     def __init__(self):
         super().__init__()
         self.listen_to = None
@@ -29,6 +30,7 @@ class DetectMouse(SlodonixThread):
     """
     Thread to detect mouse movement.
     """
+
     def __init__(self, obj, method, info):
         super().__init__()
         self.obj = obj
@@ -41,7 +43,9 @@ class DetectMouse(SlodonixThread):
         while not self.stop_event.is_set():
             curr_pos = self.info.position()
             if prev_pos != curr_pos:
-                _method = getattr(self.obj, self.method)  # get the method based on the name
+                _method = getattr(
+                    self.obj, self.method
+                )  # get the method based on the name
                 _method(curr_pos)  # position has been changed call with the new one
             prev_pos = curr_pos
 
@@ -51,14 +55,16 @@ class Listener:
     Listen to different events.
     Handling threads.
     """
+
     THREADS = []
 
     def __init__(self, _instance: "_Info") -> None:
         super().__init__()
         self.info = _instance  # _Info() instance
 
-    def add_listener(self, _type: str, method: callable, obj: "DisplayAsParent") -> None:
-
+    def add_listener(
+        self, _type: str, method: callable, obj: "DisplayAsParent"
+    ) -> None:
         """
         Start a thread to listen for a specific event type.
         ### Arguments:
@@ -89,8 +95,7 @@ class Listener:
 
 @dataclasses.dataclass
 class Event:
-    """
+    """ """
 
-    """
     type: str
     time: float

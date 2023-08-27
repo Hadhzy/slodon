@@ -1,10 +1,18 @@
 from dataclasses import dataclass
 import ctypes
 import functools
+
 # This project
 from slodon.slodonix.systems.windows.constants import *
 
-__all__ = ["Position", "is_shift_character", "send_mouse_event", "linear", "fail_safe_check", "slodonix_check"]
+__all__ = [
+    "Position",
+    "is_shift_character",
+    "send_mouse_event",
+    "linear",
+    "fail_safe_check",
+    "slodonix_check",
+]
 
 
 @dataclass
@@ -75,11 +83,11 @@ def send_mouse_event(ev, x, y, dw_data=0, instance=None):
 
 def linear(n):
     """
-      Returns ``n``, where ``n`` is the float argument between ``0.0`` and ``1.0``. This function is for the default
-      linear tween for mouse moving functions.
+    Returns ``n``, where ``n`` is the float argument between ``0.0`` and ``1.0``. This function is for the default
+    linear tween for mouse moving functions.
 
-      This function was copied from PyTweening module, so that it can be called even if PyTweening is not installed.
-      """
+    This function was copied from PyTweening module, so that it can be called even if PyTweening is not installed.
+    """
 
     if not 0.0 <= n <= 1.0:
         raise Exception("Argument must be between 0.0 and 1.0.")
@@ -107,6 +115,7 @@ def slodonix_check(instance=None):
     A decorator which can be used over all the methods in Desktop.
     Prevent errors.
     """
+
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -114,15 +123,15 @@ def slodonix_check(instance=None):
             return func(*args, **kwargs)
 
         return wrapper
+
     return decorator
 
 
 def normalize_button():
     """
-     - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L825-L879C22
+    - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L825-L879C22
     """
 
 
 def normalize_xy_args():
     pass
-

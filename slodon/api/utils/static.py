@@ -10,4 +10,3 @@ import slodon.api.utils.func as func
 from slodon.api.utils.types import JSON
 
 RESPONSES: Dict[str, JSON] = {"/test1": func.res_notation("en")}
-
