@@ -1,6 +1,5 @@
 setuptools
 wheel
-python
 websockets
 textual
 hadhzy-python-xlib
