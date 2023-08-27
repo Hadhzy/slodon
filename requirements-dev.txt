@@ -1,0 +1,10 @@
+setuptools
+wheel
+websockets
+textual
+hadhzy-python-xlib
+typer
+pylint
+black
+mypy
+mkdocs-material
