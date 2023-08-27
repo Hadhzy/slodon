@@ -113,7 +113,13 @@ class _Interact:
 
     # noinspection PyMethodMayBeStatic
     def moveto(
-        self, x: int | None, y: int | None, x_offset=None, y_offset=None, duration: int | float = 0, tween=linear
+        self,
+        x: int | None,
+        y: int | None,
+        x_offset=None,
+        y_offset=None,
+        duration: int | float = 0,
+        tween=linear,
     ) -> None:
         """
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L100
@@ -639,7 +645,9 @@ class Display:
              -None
         """
         self._interact.mouse_down(x=x, y=y, button=button, with_release=False)
-        self._interact.moveto(x=x, y=y, x_offset=0, y_offset=0, duration=duration, tween=tween)
+        self._interact.moveto(
+            x=x, y=y, x_offset=0, y_offset=0, duration=duration, tween=tween
+        )
         self._interact.mouse_up(x=x, y=y, button=button)
 
     @slodonix_check(instance=_Info())
@@ -787,7 +795,6 @@ class DisplayAsParent(Display, ABC):
         self._add_listeners()
 
         try:
-
             self.body()  # run the main body
 
             Listener.destroy_threads()  # destroy event listeners

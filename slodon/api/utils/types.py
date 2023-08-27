@@ -10,6 +10,7 @@ class Response(TypedDict):
     """
     Represent a Slodon server response
     """
+
     status: int
     message: str
     content: JSON

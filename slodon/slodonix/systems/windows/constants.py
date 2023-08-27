@@ -19,7 +19,7 @@ __all__ = [
     "FAILSAFE_POINTS",
     "MINIMUM_DURATION",
     "MINIMUM_SLEEP",
-    "MOUSEEVENTF_WHEEL"
+    "MOUSEEVENTF_WHEEL",
 ]
 
 KEYEVENTF_KEYDOWN = 0x0000
@@ -52,4 +52,6 @@ MOUSEEVENTF_WHEEL = 0x0800
 MOUSEEVENTF_HWHEEL = 0x01000
 
 
-FAILSAFE_POINTS = [(0, 0)]  # https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L573C27-L573C27
+FAILSAFE_POINTS = [
+    (0, 0)
+]  # https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L573C27-L573C27

@@ -1,6 +1,7 @@
 # https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
 import ctypes
 from ctypes import wintypes
+
 __all__ = ["full_map"]  # represent the key and the virtual key code
 
 keyboard_mapping = [

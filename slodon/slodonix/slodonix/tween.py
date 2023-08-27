@@ -5,7 +5,7 @@ import math
 from typing import List, Tuple, Union
 
 
-__version__ = '1.0.7'
+__version__ = "1.0.7"
 
 
 # from http://www.roguebasin.com/index.php?title=Bresenham%27s_Line_Algorithm#Python
@@ -67,7 +67,9 @@ def getLine(x1, y1, x2, y2):  # type: (int, int, int, int) -> List[Tuple[int, in
     return points
 
 
-def getPointOnLine(x1, y1, x2, y2, n):  # type: (Union[int, float], Union[int, float], Union[int, float], Union[int, float], Union[int, float]) -> Tuple[Union[int, float], Union[int, float]]
+def getPointOnLine(
+    x1, y1, x2, y2, n
+):  # type: (Union[int, float], Union[int, float], Union[int, float], Union[int, float], Union[int, float]) -> Tuple[Union[int, float], Union[int, float]]
     """Returns the (x, y) tuple of the point that has progressed a proportion
     n along the line defined by the two x, y coordinates.
 
@@ -105,7 +107,7 @@ def getPointOnLine(x1, y1, x2, y2, n):  # type: (Union[int, float], Union[int, f
 def _checkRange(n):  # type: (Union[int, float]) -> None
     """Raises ValueError if the argument is not between 0.0 and 1.0."""
     if not 0.0 <= n <= 1.0:
-        raise ValueError('Argument must be between 0.0 and 1.0.')
+        raise ValueError("Argument must be between 0.0 and 1.0.")
 
 
 def linear(n):  # type: (Union[int, float]) -> Union[int, float]
@@ -307,7 +309,9 @@ def easeInOutQuint(n):  # type: (Union[int, float]) -> Union[int, float]
         return 0.5 * (n**5 + 2)
 
 
-def easeInPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInPoly(
+    n, degree=2
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A polynomial tween function of given degree that begins slow and then accelerates.
 
     Args:
@@ -318,11 +322,13 @@ def easeInPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) -> 
     """
     _checkRange(n)
     if not isinstance(degree, (int, float)) or degree < 0:
-        raise ValueError('degree argument must be a positive number.')
+        raise ValueError("degree argument must be a positive number.")
     return n**degree
 
 
-def easeOutPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeOutPoly(
+    n, degree=2
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A polynomial tween function of given degree that begins fast and then decelerates.
 
     Args:
@@ -333,11 +339,13 @@ def easeOutPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) ->
     """
     _checkRange(n)
     if not isinstance(degree, (int, float)) or degree < 0:
-        raise ValueError('degree argument must be a positive number.')
+        raise ValueError("degree argument must be a positive number.")
     return 1 - abs((n - 1) ** degree)
 
 
-def easeInOutPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInOutPoly(
+    n, degree=2
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A polynomial tween function of given degree that accelerates, reaches the midpoint, and then decelerates.
 
     Args:
@@ -348,7 +356,7 @@ def easeInOutPoly(n, degree=2):  # type: (Union[int, float], Union[int, float]) 
     """
     _checkRange(n)
     if not isinstance(degree, (int, float)) or degree < 0:
-        raise ValueError('degree argument must be a positive number.')
+        raise ValueError("degree argument must be a positive number.")
 
     n *= 2
     if n < 1:
@@ -498,7 +506,9 @@ def easeInOutCirc(n):  # type: (Union[int, float]) -> Union[int, float]
         return 0.5 * (math.sqrt(1 - n**2) + 1)
 
 
-def easeInElastic(n, amplitude=1, period=0.3):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInElastic(
+    n, amplitude=1, period=0.3
+):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
     """An elastic tween function that begins with an increasing wobble and then snaps into the destination.
 
     Args:
@@ -511,7 +521,9 @@ def easeInElastic(n, amplitude=1, period=0.3):  # type: (Union[int, float], Unio
     return 1 - easeOutElastic(1 - n, amplitude=amplitude, period=period)
 
 
-def easeOutElastic(n, amplitude=1, period=0.3):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
+def easeOutElastic(
+    n, amplitude=1, period=0.3
+):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
     """An elastic tween function that overshoots the destination and then "rubber bands" into the destination.
 
     Args:
@@ -531,7 +543,9 @@ def easeOutElastic(n, amplitude=1, period=0.3):  # type: (Union[int, float], Uni
     return amplitude * 2 ** (-10 * n) * math.sin((n - s) * (2 * math.pi / period)) + 1
 
 
-def easeInOutElastic(n, amplitude=1, period=0.5):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInOutElastic(
+    n, amplitude=1, period=0.5
+):  # type: (Union[int, float], Union[int, float], Union[int, float]) -> Union[int, float]
     """An elastic tween function wobbles towards the midpoint.
 
     Args:
@@ -548,7 +562,9 @@ def easeInOutElastic(n, amplitude=1, period=0.5):  # type: (Union[int, float], U
         return easeOutElastic(n - 1, amplitude=amplitude, period=period) / 2 + 0.5
 
 
-def easeInBack(n, s=1.70158):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInBack(
+    n, s=1.70158
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A tween function that backs up first at the start and then goes to the destination.
 
     Args:
@@ -561,7 +577,9 @@ def easeInBack(n, s=1.70158):  # type: (Union[int, float], Union[int, float]) ->
     return n * n * ((s + 1) * n - s)
 
 
-def easeOutBack(n, s=1.70158):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeOutBack(
+    n, s=1.70158
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A tween function that overshoots the destination a little and then backs into the destination.
 
     Args:
@@ -575,7 +593,9 @@ def easeOutBack(n, s=1.70158):  # type: (Union[int, float], Union[int, float]) -
     return n * n * ((s + 1) * n + s) + 1
 
 
-def easeInOutBack(n, s=1.70158):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
+def easeInOutBack(
+    n, s=1.70158
+):  # type: (Union[int, float], Union[int, float]) -> Union[int, float]
     """A "back-in" tween function that overshoots both the start and destination.
 
     Args:

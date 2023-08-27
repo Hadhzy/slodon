@@ -10,6 +10,7 @@ class _Sync(Static):
     """
     This class is used to synchronize the user, if it is needed.
     """
+
     def render(self) -> RenderableType:
         return "Syncing..."
 
@@ -20,9 +21,8 @@ class _Task:
 
 class SlodonCLI(App):
     """The CLI application"""
-    BINDINGS = [
-        Binding("q", "quit", "Quit")
-    ]
+
+    BINDINGS = [Binding("q", "quit", "Quit")]
 
     def compose(self) -> ComposeResult:
         yield _Sync()
@@ -35,4 +35,3 @@ def start_cli():
 
 if __name__ == "__main__":
     start_cli()
-

@@ -25,7 +25,9 @@ def res_notation(notion: str) -> JSON:
     _not_list = notion.split(".")
     _parent = Path(__file__).parent.absolute()
     _file = Path(_not_list[0])
-    with open(f"{_parent}/{base}/{_file}.json", "r", encoding="utf-8") as f:  # pylint: disable=invalid-name
+    with open(
+        f"{_parent}/{base}/{_file}.json", "r", encoding="utf-8"
+    ) as f:  # pylint: disable=invalid-name
         _json = json.load(f)
 
     keys = _not_list[1:]

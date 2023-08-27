@@ -9,6 +9,7 @@ class MOUSEINPUT(ctypes.Structure):
     """
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput
     """
+
     _fields_ = [
         ("dx", ctypes.wintypes.LONG),
         ("dy", ctypes.wintypes.LONG),
@@ -24,6 +25,7 @@ class KEYBDINPUT(ctypes.Structure):
     """
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput
     """
+
     _fields_ = [
         ("wVk", ctypes.wintypes.WORD),
         ("wScan", ctypes.wintypes.WORD),
@@ -37,6 +39,7 @@ class HARDWAREINPUT(ctypes.Structure):
     """
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-hardwareinput
     """
+
     _fields_ = [
         ("uMsg", ctypes.wintypes.DWORD),
         ("wParamL", ctypes.wintypes.WORD),
@@ -48,6 +51,7 @@ class INPUT(ctypes.Structure):
     """
     https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input
     """
+
     class _I(ctypes.Union):
         _fields_ = [
             ("mi", MOUSEINPUT),
@@ -66,6 +70,7 @@ class POSITION(ctypes.Structure):
     """
     Position of the mouse structure
     """
+
     _fields_ = [
         ("x", ctypes.c_long),
         ("y", ctypes.c_long),
@@ -76,6 +81,7 @@ class SIZE(ctypes.Structure):
     """
     Size of the window structure
     """
+
     _fields_ = [
         ("cx", ctypes.c_long),
         ("cy", ctypes.c_long),
@@ -86,4 +92,3 @@ class SIZE(ctypes.Structure):
 
     def __repr__(self) -> str:
         return f"<Size: {self.cx}, {self.cy}>"
-
