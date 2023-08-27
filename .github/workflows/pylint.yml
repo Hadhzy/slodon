@@ -11,12 +11,13 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.11"
-          
+
       - name: Install dependencies
         run: |
-           pip install . 
+           pip install -r requirements-dev.txt
+
 
       - name: Run PyLint check
         run: | 
-          pylint  --fail-under 10 --limit-inference-results 0 ./slodon
+          python -m pylint  --fail-under 10 --limit-inference-results 0 ./slodon
     
