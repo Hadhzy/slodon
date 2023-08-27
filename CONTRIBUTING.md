@@ -16,16 +16,7 @@ these terms, and the mechanism we use to do this is called a Developer's Certifi
 [(DCO)](.github/DCO.md).  This is very similar to the process used by the Linux(R) kernel, Samba, and many
 other major open source projects.
 
-To participate under these terms, all that you must do is include a line like the following as the
-last line of the commit message for each commit in your contribution:
-
-    Signed-Off-By: Random J. Developer <random@developer.example.org>
-
-
-The simplest way to accomplish this is to add a github bot in the future TBD or use `-s` or `--signoff` to your `git commit` command.
-
-
-You must use your real name (sorry, no pseudonyms, and no anonymous contributions).
+By continuing you have confirmed that you are able and willing to make your contributions under these terms above.
 
 ## Steps
 
