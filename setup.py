@@ -13,5 +13,5 @@ setup(
     url="https://github.com/Hadhzy/hzy",
     license="Apache 2.0",
     packages=["slodon"],
-    author="Hadhzy Organisation"
+    author="Hadhzy Organisation",
 )
