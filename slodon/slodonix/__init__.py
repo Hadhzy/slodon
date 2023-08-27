@@ -24,7 +24,6 @@ _display_manager = get_display_server
 
 
 if _system == 'Windows':
-    print("Here")
     from slodon.slodonix.slodonix.slodonix_windows import *
     from slodon.slodonix.systems.windows.constants import *
 elif _system == 'Linux':
