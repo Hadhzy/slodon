@@ -4,6 +4,11 @@
     AI Agent.
 </p>
 
+
+<p align="center">
+<img src="https://github.com/Hadhzy/slodon/blob/main/_static/images/slodon_logo.png" alt="" width="70%">
+</p>
+
 <div align="center">
     
 [![Python Version](https://img.shields.io/badge/Python-3.11-blue.svg)](https://github.com/FlurryGLo/slodon)
