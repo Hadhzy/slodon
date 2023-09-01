@@ -23,6 +23,10 @@ We are supporting the *essential* and most common operating systems such as supp
 
 <br/>
 
+Understanding the usage of slodonix visit our docs: 
+
+<br/>
+
 # User applications
 <img src="https://media.discordapp.net/attachments/753660501996863488/1147255571335098440/image.png" alt="user app image" width="100%">
 
