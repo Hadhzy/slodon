@@ -43,7 +43,7 @@ libraries are both *independent* and *strongly connected* with Slodon. Access ea
 <br/>
 ## Slodon's sub-components
 - [slodonix](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix)
-- [SloScrap](https://github.com/Hadhzy/slodon/tree/main/slodon/SloScrap)
+- [SloScrap](https://github.com/Hadhzy/slodon/tree/main/slodon/SLoScrap)
 - [SloSynth](https://github.com/Hadhzy/slodon/tree/main/slodon/SloSynth)
 
 <br/>
