@@ -30,6 +30,9 @@
 <br/>
 <br/>
 ## What is slodon?
+
+*If I had to sum *Slodon* up then essentially Slodon will automate and do stuff for you based on what you ask, e.g you can simply ask it to perform actions like opening your file manager and creating a new 'work' file on your C drive, and it will take care of the job for you*. 
+
 ***Slodon*** functions as a *wrapper* for its sub-parts. We refer to the eco-system as Slodon with respect to its components. ”slodon”
 means the eco-system whose main goal is to establish an [AI Agent](https://en.wikipedia.org/wiki/Intelligent_agent). The agent aims to control [user space programs](https://en.wikipedia.org/wiki/User_space_and_kernel_space) and interactions
 using extensive language models and automated processes. The project’s primary stack is [**Python**](https://www.python.org/), capable of
