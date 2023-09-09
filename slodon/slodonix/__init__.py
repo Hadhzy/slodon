@@ -40,14 +40,6 @@ elif _system == "Darwin":
     from slodon.slodonix.slodonix.slodonix_osx import *
 
 
-def get_buttons():
-    pass
-
-
-def get_keys():
-    pass
-
-
 # after the actual code(for better user experience):
 if TYPE_CHECKING:
     from slodon.slodonix.slodonix.slodonix_windows import *

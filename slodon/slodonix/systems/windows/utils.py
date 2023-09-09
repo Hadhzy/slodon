@@ -32,7 +32,7 @@ def is_shift_character(character: str) -> bool:
     source: https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L526-L532
     """
     # NOTE TODO - This will be different for non-qwerty keyboards.
-    return character.isupper() or character in set('~!@#$%^&*()_+{}|:"<>?')
+    return character.isupper() or character in set('~!@#$%^&*()_+{}|:"<>?') # character is either uppercase or in the set
 
 
 def send_mouse_event(ev, x, y, dw_data=0, instance=None):
@@ -114,6 +114,7 @@ def slodonix_check(instance=None):
     """
     A decorator which can be used over all the methods in Desktop.
     Prevent errors.
+    
     """
 
     def decorator(func):

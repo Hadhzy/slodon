@@ -62,9 +62,10 @@ class _Interact:
     # noinspection PyMethodMayBeStatic
     def key_up(self, key: str) -> None:
         """
+        Performs a keyboard key release.
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py#L154
         ### Arguments:
-            - key: The key to press
+            - key: The key to release
         ### Returns:
            - None
         """
@@ -385,7 +386,7 @@ class Display:
         self._interact.click(x, y, button, clicks)
 
     @slodonix_check(instance=_Info())
-    def press(self, keys, presses=1, interval=0.0) -> None:
+    def key_press(self, keys, presses=1, interval=0.0) -> None:
         """
         Presses a key press down, followed by a release.
         ### Arguments:

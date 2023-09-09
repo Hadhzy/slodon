@@ -6,32 +6,38 @@
 <br/>
 <br/>
 
-# Short Conclusion
-Basically, if I had to sum it up, Slodonix does all the heavy lifting when it comes to user interactions —clicking on programs, popping open tabs, you name it. Then, we've got this cool model called [SloSynth](https://github.com/Hadhzy/slodon/tree/main/slodon/SloSynth), which we're training using all that action data. The model will be used to handle and automate all of these interactions based on the prompt that the user will provide. Please follow the readme for a more deep understanding.   
+## What is Slodonix?
 
-
+Slodonix is a python library which has a couple of dependencies:
+<br/>
 <br/>
 
-<br/>
+- <a href="https://github.com/Hadhzy/hzy" target="_blank"><code>hzy</code></a>
+- <a href="https://pypi.org/project/hadhzy-python-xlib/" target="_blank">hadhzy-python-xlib</a>
 
-# Introduction
-Slodonix is an automated library for [emulated input](https://en.wikipedia.org/wiki/Emulator) purposes. The library **handles all the interactions**, and it’s something we can continuously enhance over time. It’s a highly tangible feature that users can *directly* experience and benefit from. It plays a vital role in the overall functionality. It’s not some "hidden magic" happening behind the scenes. When you give it a task, this library takes charge and carries out the necessary interactions. We are implementing templates for certain user actions such as: opening a window, closing a tab, running an application. Obviously we are thrived to make this process faster and extended it furthermore. One of the main benefits is that you can **keep an eye on the agent** and make adjustments if needed. It’s like watching the whole process *unfold in front of you*, instead of just receiving a file and having to start over from scratch if something goes wrong. It’s much more interactive and gives you immediate response.
+Slodonix uses the underlying api of the current operating system like using windows api through ctypes. It is important to note that this "API(windows api through ctypes)" is the same on every operating systems, only the underlying protocol changes.
 
-<br/>
+Slodonix is responsible for doing emulated input by using low-level APIs specialized on the current operating system display server(on Linux), or communicating directly to the API(win32 on windows).
 
-We are supporting the *essential* and most common operating systems such as support for *Linux*, *Windows*, and *MacOS* platforms. In Linux, we can work with display managers(servers), whereas in Windows, **For example**, the display is an integral part of the operating system itself. Additionally, the model may store additional user and platform information, and safety protocols are *crucial*. It’s essential to save the computer state to enable the ability to redo actions if necessary. Currently, the library operates as a Python sub-package and receives updates directly from the ***main*** branch.
+This library puts all these together and offers an easy API e.g. (mouse click, mouse move), which can be used in a lot of different ways(context manager, inheriting from meta class).
 
-<br/>
+Slodonix plays a vital role and can be used independently under the slodon package.
 
-Understanding the usage of slodonix visit our docs: 
+Now let's see how to use it and see how it works.
 
-<br/>
+## How to use it?
 
-# User applications
-<img src="https://media.discordapp.net/attachments/753660501996863488/1147255571335098440/image.png" alt="user app image" width="100%">
+One way of using Slodonix, is by inheritence following these steps:
 
-<br/>
+**Step 1**. **Create Your Class and Inherit [DisplayAsParent]()**:
+Start by making your own class. In this class, you should use the DisplayAsParent class as a starting point. This inheritance will give you access to an abstract method called body, which you'll need to fill in.
+
+**Step 2**. **Fill in the body Method**:
+Inside the body method, you get to decide what your program should do. You can think of it as a place to write down all the actions your program will take. These actions are based on the capabilities provided by the Display class, which, in turn, uses the Interact class to handle things like button clicks, mouse movements, and so on.
+
+**Step 3**. **Run Your Program**:
+Once you've defined your program's actions within the body method. You'd have to somehow need to execute it, you do this by calling the run method. This method, which is part of the DisplayAsParent class, takes care of executing your program's main defined instructions. It essentially executes and runs out all the actions you specified in the body method. Additionally, it might set up event listeners if there is any.
 
 ---
- 
+
 The active development is in the [slodon/slodonix](https://github.com/Hadhzy/slodon/tree/main/slodon/slodonix)

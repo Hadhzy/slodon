@@ -17,8 +17,9 @@ from slodon.slodonix.systems.windows.event import Listener
 
 __all__ = ["Display", "get_os", "DisplayContext", "DisplayAsParent"]
 
-ev = MOUSEEVENTF_LEFTDOWN
-ev_up = MOUSEEVENTF_LEFTUP
+ev = MOUSEEVENTF_LEFTDOWN  # value in hex: 0x0002 -> left mouse button down
+ev_up = MOUSEEVENTF_LEFTUP  # value in hex: 0x0004 -> left mouse button up
+# value in hex: 0x0002 + 0x0004 -> left mouse button click (down + up = click)
 ev_click = MOUSEEVENTF_LEFTCLICK
 
 X_TYPE = Union[int, float, None, tuple]
@@ -65,10 +66,12 @@ class _Interact:
         """
 
         if key_map[key] is None:
-            return
+            return  # the key is not valid
 
+        # check if the key needs shift, meaning that it's either a capital letter or a special character that needs shift to be pressed
         needs_shift = is_shift_character(key)
 
+        # get the mods and the vk_code from the key_map
         mods, vk_code = divmod(key_map[key], 0x100)
 
         for apply_mod, vk_mod in [
@@ -87,12 +90,14 @@ class _Interact:
             (mods & 4, 0x12),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
+                ctypes.windll.user32.keybd_event(
+                    vk_mod, 0, KEYEVENTF_KEYUP, 0)
 
     # Todo: redefine this by using the latest SendInput function
     # noinspection PyMethodMayBeStatic
     def key_down(self, key: str, with_release=False) -> None:
         """
+        Performs a keyboard key press down (without the release afterwards).
         - https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L250-L292
         Key press without release | with release
@@ -117,7 +122,8 @@ class _Interact:
             (mods & 1 or needs_shift, 0x10),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
+                ctypes.windll.user32.keybd_event(
+                    vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
 
         ctypes.windll.user32.keybd_event(vk_code, 0, KEYEVENTF_KEYDOWN, 0)
         for apply_mod, vk_mod in [
@@ -126,7 +132,8 @@ class _Interact:
             (mods & 4, 0x12),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
+                ctypes.windll.user32.keybd_event(
+                    vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
 
         if with_release:
             self.key_up(key)
@@ -230,7 +237,8 @@ class _Interact:
         y = int(y) or self.info.position().y
 
         try:
-            send_mouse_event(ev, x, y, instance=_Info())  # instance for the size
+            send_mouse_event(ev, x, y, instance=_Info()
+                             )  # instance for the size
         except (PermissionError, OSError):
             # TODO: We need to figure out how to prevent these errors,
             #  see https://github.com/asweigart/pyautogui/issues/60
@@ -368,7 +376,8 @@ class _Interact:
                 y = height - 1
 
         try:
-            send_mouse_event(MOUSEEVENTF_WHEEL, x, y, instance=_Info(), dw_data=clicks)
+            send_mouse_event(MOUSEEVENTF_WHEEL, x, y,
+                             instance=_Info(), dw_data=clicks)
         except (PermissionError, OSError):
             pass
 
@@ -471,7 +480,7 @@ class Display:
         self.info = _Info()
         self._interact = _Interact(
             info=self.info
-        )  # SHOULD BE NOT USED DIRECTLY OUTSIDE THE CLASS
+        )  # SHOULD NOT BE USED DIRECTLY OUTSIDE THE CLASS
 
     @slodonix_check(instance=_Info())
     def click(self, x=None, y=None, button=LEFT, clicks: int = 1) -> None:
@@ -483,7 +492,7 @@ class Display:
         self._interact.click(x=x, y=y, button=button, clicks=clicks)
 
     @slodonix_check(instance=_Info())
-    def press(self, keys: str | list, presses=1, interval=0.0) -> None:
+    def key_press(self, keys: str | list, presses=1, interval=0.0) -> None:
         """
         Performs a keyboard key press down, followed by a release.
         - https://github.com/asweigart/pyautogui/blob/master/pyautogui/__init__.py#L1581
@@ -518,8 +527,7 @@ class Display:
     @slodonix_check(instance=_Info())
     def type_write(self, message=None, interval=0) -> None:
         """
-        Performs a keyboard key press down, followed by a release.Performs a keyboard key press down,
-        followed by a release,
+        Performs a keyboard key press down, followed by a release.
         for each of
         the characters in message.
 
@@ -657,7 +665,8 @@ class Display:
         """
 
         # move the mouse to the x, y coordinates
-        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0,
+                              duration=0, tween=tween)
         self._interact.mouse_down(
             x, y, button, with_release=with_release
         )  # press the button
@@ -690,7 +699,8 @@ class Display:
         Returns:
           None
         """
-        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0,
+                              duration=0, tween=tween)
         self._interact.mouse_up(x, y, button)  # release the button
 
     @slodonix_check(instance=_Info())
@@ -746,7 +756,7 @@ class Display:
     @slodonix_check(instance=_Info())
     def drag_to(self, x=None, y=None, duration=0.0, tween=linear, button=LEFT) -> None:
         """
-        Performs a mouse drag (mouse movement while a button is held down) to a
+        Performs a mouse drag (mouse movement while the mouse button is held down) to a
         point on the screen.
 
         The x and y parameters detail where the mouse event happens. If None, the
@@ -902,6 +912,7 @@ class DisplayContext(Display):
 class DisplayAsParent(Display, ABC):
     """
     Use the display class as a parent for other classes.
+    This class will be used as a parent for classes to use slodonix.
     """
 
     def __init__(self) -> None:
@@ -937,6 +948,6 @@ class DisplayAsParent(Display, ABC):
 
 def get_os() -> str:
     """
-    Return back the currently used operating system.
+    Returns back the currently used operating system.
     """
     return "Windows"

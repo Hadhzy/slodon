@@ -10,5 +10,4 @@ class Test(DisplayAsParent):
         self.type_write("Hello World!")
         print(self.on_screen(100, 100))
 
-
 Test().run()

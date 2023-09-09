@@ -16,6 +16,7 @@ class SlodonixThread(threading.Thread):
     def __init__(self):
         super().__init__()
         self.listen_to = None
+        # control the execution of the thread.
         self.stop_event = threading.Event()
 
     def run(self):
@@ -46,7 +47,8 @@ class DetectMouse(SlodonixThread):
                 _method = getattr(
                     self.obj, self.method
                 )  # get the method based on the name
-                _method(curr_pos)  # position has been changed call with the new one
+                # position has been changed call with the new one
+                _method(curr_pos)
             prev_pos = curr_pos
 
 
@@ -79,7 +81,8 @@ class Listener:
             case "mouse":  # In case of mouse event
                 movement_thread = DetectMouse(obj, method, self.info)
                 movement_thread.start()
-                self.THREADS.append(movement_thread)  # add the thread to the list
+                # add the thread to the list
+                self.THREADS.append(movement_thread)
             case "key_pressed":
                 pass
 
