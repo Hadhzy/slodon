@@ -23,7 +23,7 @@ class SlodonixThread(threading.Thread):
         """
         trigger when "thread.start()" is called.
         """
-        while not self.stop_event.is_set():
+        while not self.stop_event.is_set(): # while the thread is not stopped
             self.listen_to()
 
 
@@ -65,13 +65,13 @@ class Listener:
         self.info = _instance  # _Info() instance
 
     def add_listener(
-        self, _type: str, method: callable, obj: "DisplayAsParent"
+        self, _type: str, method: str, obj: "DisplayAsParent"
     ) -> None:
         """
         Start a thread to listen for a specific event type.
         ### Arguments:
               - _type (str): The type of event to listen for.
-              - method (callable): The method to call when the event is triggered.
+              - method (str): The method to call when the event is triggered.
               - obj: The object to call the method on.
         ### Returns:
            None
@@ -79,8 +79,8 @@ class Listener:
 
         match _type:
             case "mouse":  # In case of mouse event
-                movement_thread = DetectMouse(obj, method, self.info)
-                movement_thread.start()
+                movement_thread = DetectMouse(obj, method, self.info) # create a thread
+                movement_thread.start() # start the thread
                 # add the thread to the list
                 self.THREADS.append(movement_thread)
             case "key_pressed":

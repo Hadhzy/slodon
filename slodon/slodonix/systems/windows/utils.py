@@ -104,9 +104,9 @@ def fail_safe_check(fail_safe: bool = True, instance=None):
     - instance Desktop instance in order to reach methods like size() and position()
     """
 
-    if fail_safe and tuple(instance.position(_tuple=True)) in FAILSAFE_POINTS:
+    if fail_safe and tuple(instance.position(_tuple=True)) in FAILSAFE_POINTS: # If the mouse is in any of the four corners of the primary monitor 
         raise Exception(
-            "Triggered fail-safe. To disable this functionality, set fail_safe to False."
+            "Triggered fail-safe. The fail-safe feature is enabled by default and it takes care of checking whether the mouse is in any of the four corners of the primary monitor during the execution the self.body(). To disable this functionality, set fail_safe to False."
         )
 
 

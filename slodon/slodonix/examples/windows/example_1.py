@@ -7,10 +7,10 @@ class MyApp(slodonix.DisplayAsParent):
         super().__init__()
 
     def body(self):
-        self.move_to(100, 100)
-
-    def trigger_mouse(self, curr_pos):
-        print("moved", curr_pos.y)
+        self.move_to(10, 0)
+    
+    def trigger_mouse(self, event):
+        print("Moving")
 
 
 MyApp().run()

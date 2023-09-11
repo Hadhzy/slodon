@@ -919,9 +919,10 @@ class DisplayAsParent(Display, ABC):
         super().__init__()
         self.listener = Listener(_Info())  # initialise the listener
 
-    def _add_listeners(self) -> None:
-        if hasattr(self, "trigger_mouse"):
-            self.listener.add_listener("mouse", "trigger_mouse", self)
+    def _add_listeners(self):
+        # TODO: Add more listeners and allow custom listeners
+        if hasattr(self, "trigger_mouse"): # Check if the method exists
+            self.listener.add_listener("mouse", "trigger_mouse", self) # add mouse listener
 
     @abstractmethod
     def body(self) -> None:
