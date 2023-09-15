@@ -1,7 +1,7 @@
 import dataclasses
 import threading
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
     from slodon.slodonix.slodonix.slodonix_windows import _Info
@@ -23,7 +23,7 @@ class SlodonixThread(threading.Thread):
         """
         trigger when "thread.start()" is called.
         """
-        while not self.stop_event.is_set(): # while the thread is not stopped
+        while not self.stop_event.is_set():  # while the thread is not stopped
             self.listen_to()
 
 
@@ -58,15 +58,13 @@ class Listener:
     Handling threads.
     """
 
-    THREADS = []
+    THREADS: List[threading.Thread] = []
 
     def __init__(self, _instance: "_Info") -> None:
         super().__init__()
         self.info = _instance  # _Info() instance
 
-    def add_listener(
-        self, _type: str, method: str, obj: "DisplayAsParent"
-    ) -> None:
+    def add_listener(self, _type: str, method: str, obj: "DisplayAsParent") -> None:
         """
         Start a thread to listen for a specific event type.
         ### Arguments:
@@ -79,8 +77,8 @@ class Listener:
 
         match _type:
             case "mouse":  # In case of mouse event
-                movement_thread = DetectMouse(obj, method, self.info) # create a thread
-                movement_thread.start() # start the thread
+                movement_thread = DetectMouse(obj, method, self.info)  # create a thread
+                movement_thread.start()  # start the thread
                 # add the thread to the list
                 self.THREADS.append(movement_thread)
             case "key_pressed":

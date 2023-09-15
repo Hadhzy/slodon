@@ -90,8 +90,7 @@ class _Interact:
             (mods & 4, 0x12),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(
-                    vk_mod, 0, KEYEVENTF_KEYUP, 0)
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)
 
     # Todo: redefine this by using the latest SendInput function
     # noinspection PyMethodMayBeStatic
@@ -122,8 +121,7 @@ class _Interact:
             (mods & 1 or needs_shift, 0x10),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(
-                    vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYDOWN, 0)  #
 
         ctypes.windll.user32.keybd_event(vk_code, 0, KEYEVENTF_KEYDOWN, 0)
         for apply_mod, vk_mod in [
@@ -132,8 +130,7 @@ class _Interact:
             (mods & 4, 0x12),
         ]:  # HANKAKU not supported! mods & 8
             if apply_mod:
-                ctypes.windll.user32.keybd_event(
-                    vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
+                ctypes.windll.user32.keybd_event(vk_mod, 0, KEYEVENTF_KEYUP, 0)  #
 
         if with_release:
             self.key_up(key)
@@ -196,8 +193,8 @@ class _Interact:
             if len(steps) > 1:
                 time.sleep(sleep_amount)
 
-            tween_x = int(round(tween_x))
-            tween_y = int(round(tween_y))
+            tween_x = int(round(tween_x)) # type: ignore
+            tween_y = int(round(tween_y)) # type: ignore
 
             if (tween_x, tween_y) not in FAILSAFE_POINTS:
                 fail_safe_check(instance=self.info)
@@ -237,8 +234,7 @@ class _Interact:
         y = int(y) or self.info.position().y
 
         try:
-            send_mouse_event(ev, x, y, instance=_Info()
-                             )  # instance for the size
+            send_mouse_event(ev, x, y, instance=_Info())  # instance for the size
         except (PermissionError, OSError):
             # TODO: We need to figure out how to prevent these errors,
             #  see https://github.com/asweigart/pyautogui/issues/60
@@ -376,8 +372,7 @@ class _Interact:
                 y = height - 1
 
         try:
-            send_mouse_event(MOUSEEVENTF_WHEEL, x, y,
-                             instance=_Info(), dw_data=clicks)
+            send_mouse_event(MOUSEEVENTF_WHEEL, x, y, instance=_Info(), dw_data=clicks)
         except (PermissionError, OSError):
             pass
 
@@ -665,8 +660,7 @@ class Display:
         """
 
         # move the mouse to the x, y coordinates
-        self._interact.moveto(x, y, x_offset=0, y_offset=0,
-                              duration=0, tween=tween)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
         self._interact.mouse_down(
             x, y, button, with_release=with_release
         )  # press the button
@@ -699,12 +693,11 @@ class Display:
         Returns:
           None
         """
-        self._interact.moveto(x, y, x_offset=0, y_offset=0,
-                              duration=0, tween=tween)
+        self._interact.moveto(x, y, x_offset=0, y_offset=0, duration=0, tween=tween)
         self._interact.mouse_up(x, y, button)  # release the button
 
     @slodonix_check(instance=_Info())
-    def on_screen(self, x: int | Position, y: int = None) -> bool:
+    def on_screen(self, x: Position | int | Any , y: int | None = None) -> bool:
         """
         Returns True if the given x and y coordinates are on the screen.
 
@@ -720,7 +713,7 @@ class Display:
         """
 
         if isinstance(x, Position):
-            x, y = x.x, x.y
+            x, y = x.x, x.y # type: ignore
 
         return self._interact.on_screen(x, y)
 
@@ -921,8 +914,10 @@ class DisplayAsParent(Display, ABC):
 
     def _add_listeners(self):
         # TODO: Add more listeners and allow custom listeners
-        if hasattr(self, "trigger_mouse"): # Check if the method exists
-            self.listener.add_listener("mouse", "trigger_mouse", self) # add mouse listener
+        if hasattr(self, "trigger_mouse"):  # Check if the method exists
+            self.listener.add_listener(
+                "mouse", "trigger_mouse", self
+            )  # add mouse listener
 
     @abstractmethod
     def body(self) -> None:

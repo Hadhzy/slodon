@@ -358,7 +358,7 @@ class KeyBoardMap(dict):
         return self.__dict__.values()
 
 
-def fetch(data: bool | list = False):
+def fetch(data: list = []):
     _map = KeyBoardMap()
     _data_to_map = keyboard_mapping or data  # Todo: keyboard_mapping is always True
     for item in _data_to_map:
@@ -370,5 +370,4 @@ key_map = fetch()
 full_map = fetch(data=KEY_NAMES)
 # https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_win.py#L246
 for c in range(32, 128):
-    full_map[chr(c)] = ctypes.windll.user32.VkKeyScanA(
-        ctypes.wintypes.WCHAR(chr(c)))
+    full_map[chr(c)] = ctypes.windll.user32.VkKeyScanA(ctypes.wintypes.WCHAR(chr(c)))

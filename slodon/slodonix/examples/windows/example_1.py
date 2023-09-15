@@ -1,4 +1,5 @@
 import slodon.slodonix as slodonix
+
 # with display context manager
 
 
@@ -8,7 +9,7 @@ class MyApp(slodonix.DisplayAsParent):
 
     def body(self):
         self.move_to(10, 0)
-    
+
     def trigger_mouse(self, event):
         print("Moving")
 

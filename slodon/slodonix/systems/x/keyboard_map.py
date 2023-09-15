@@ -1,5 +1,5 @@
 __all__ = ["full_map"]
-import Xlib
+import Xlib # type: ignore
 from Xlib import display
 
 _display = display.Display()
@@ -360,7 +360,7 @@ class KeyBoardMap(dict):
         return self.__dict__.values()
 
 
-def fetch(data: bool | list = False):
+def fetch(data: list = []):
     _map = KeyBoardMap()
     _data_to_map = keyboard_mapping or data
     for item in _data_to_map:

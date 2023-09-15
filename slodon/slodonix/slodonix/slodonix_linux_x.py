@@ -1,20 +1,20 @@
 # Taken inspiration from: https://github.com/asweigart/pyautogui/blob/master/pyautogui/_pyautogui_x11.py
 from abc import ABC
 from abc import abstractmethod
-from Xlib.display import Display
-from Xlib import X
-from Xlib.ext.xtest import fake_input
+from Xlib.display import Display # type: ignore
+from Xlib import X # type: ignore
+from Xlib.ext.xtest import fake_input # type: ignore
 import time
 from typing import Sequence
 from typing import Union, Callable
 
 # This project
 from slodon.slodonix.systems.x.keyboard_map import full_map as key_map
-from slodon.slodonix.systems.windows.utils import *
 from slodon.slodonix.systems.windows.constants import LEFT, MIDDLE, RIGHT
 from slodon.slodonix.systems.x.structures import Position, SIZE
 from slodon.slodonix.slodonix.tween import linear
 from slodon.slodonix.systems.windows.utils import slodonix_check
+from slodon.slodonix.systems.windows.utils import is_shift_character
 from slodon.slodonix.systems.windows.event import Listener
 
 X_TYPE = Union[int, float, None, tuple]
@@ -368,7 +368,7 @@ class _Info:
         )
 
 
-class Display:
+class Display: # type: ignore[no-redef] 
     """
     Represents a basic display
     """
@@ -576,7 +576,7 @@ class Display:
         self._interact.mouse_up(x, y, button)
 
     @slodonix_check(instance=_Info())
-    def on_screen(self, x: int | Position, y: int = None) -> bool:
+    def on_screen(self, x: int | Position, y: int | None = None) -> bool:
         """
          Returns True if the given x and y coordinates are on the screen.
         ### Arguments:
@@ -588,7 +588,7 @@ class Display:
             - TypeError: If the given x or y coordinates are not integers.
         """
         if isinstance(x, Position):
-            x, y = x.x, x.y
+            x, y = x.x, x.y # type: ignore[attr-defined]
 
         return self._interact.on_screen(x, y)
 
