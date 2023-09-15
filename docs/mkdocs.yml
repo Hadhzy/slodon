@@ -6,7 +6,7 @@ repo_name: Hadhzy/slodon
 repo_url: https://github.com/Hadhzy/slodon
 
 theme:
-  name: dracula
+  name: material
   features:
     - announce.dismiss
     - content.action.edit
@@ -60,6 +60,10 @@ nav:
       - Installation: getting-started.md
   - Slodonix:
       - Introduction: slodonix/introduction.md
+      - Understanding how Slodonix works:
+          - Simple Working Example: slodonix/understanding-slodonix/working-example.md
+          - Structure of Slodonix:
+              - Folder Structure: slodonix/slodonix-structure/basic-structure.md
   - Model: model/home.md
   - API: API/home.md
   - SloScrap: SloScrap/home.md
