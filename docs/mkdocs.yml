@@ -71,8 +71,12 @@ nav:
   - hzy:
     - hzy/introduction.md
     
-  - developer-guide:
-    -developer-guide/developer-guide.md
+  - developer-guide: developer-guide/developer-guide.md
+  - Fundementals: 
+    - Introduction: fundementals/introduction.md
+    - Slodon's Structure:
+      - Structure: fundementals/structure.md
+  
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -82,3 +86,4 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
