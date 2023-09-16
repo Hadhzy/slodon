@@ -113,7 +113,7 @@ class RPC:
         await conn.send(json.dumps(response))  # send the response to the client
 
     async def create_ws(
-        self, ws_handler: [[Callable], Awaitable[Any]], host: str, port: int
+        self, ws_handler: [Callable, Awaitable[Any]], host: str, port: int # type: ignore[valid-type]
     ) -> None:
         """
         Creates a websocket connection to the React frontend

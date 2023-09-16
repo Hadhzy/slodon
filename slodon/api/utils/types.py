@@ -3,7 +3,7 @@ from typing import Union, Dict, Any, List, Type, TypedDict
 
 __all__ = ["JSON", "Response"]
 
-JSON = Union[Dict[str, Any], List[Any], int, str, float, bool, Type[None]]
+JSON = Union[Dict[str, Any], List[Any], int, str, float, bool, None]
 
 
 class Response(TypedDict):

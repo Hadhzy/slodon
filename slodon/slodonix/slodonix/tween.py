@@ -67,9 +67,7 @@ def getLine(x1, y1, x2, y2):  # type: (int, int, int, int) -> List[Tuple[int, in
     return points
 
 
-def getPointOnLine(
-    x1, y1, x2, y2, n
-):  # type: (Union[int, float], Union[int, float], Union[int, float], Union[int, float], Union[int, float]) -> Tuple[Union[int, float], Union[int, float]]
+def getPointOnLine(x1, y1, x2, y2, n):
     """Returns the (x, y) tuple of the point that has progressed a proportion
     n along the line defined by the two x, y coordinates.
 

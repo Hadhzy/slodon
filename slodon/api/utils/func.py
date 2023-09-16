@@ -10,7 +10,7 @@ from slodon.api.utils.types import JSON
 LANGUAGE = ""  # DEFAULT LANGUAGE en
 
 
-def res_notation(notion: str) -> JSON:
+def res_notation(notion: str) -> JSON | None:
     """
     Get the json object from the notation
 
