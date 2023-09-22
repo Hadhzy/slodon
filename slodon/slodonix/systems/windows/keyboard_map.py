@@ -4,6 +4,8 @@ from ctypes import wintypes
 
 __all__ = ["full_map"]  # represent the key and the virtual key code
 
+
+# list of tuples with their keyname and their virtual key code
 keyboard_mapping = [
     ("backspace", 0x08),
     ("\b", 0x08),
@@ -128,6 +130,7 @@ keyboard_mapping = [
     ("launchapp2", 0xB7),
 ]
 
+# list of all the key names
 KEY_NAMES: list[str] = [
     "\t",
     "\n",
@@ -355,9 +358,9 @@ class KeyBoardMap(dict):
         return self.__dict__.values()
 
 
-def fetch(data: bool | list = False):
+def fetch(data: list = []):
     _map = KeyBoardMap()
-    _data_to_map = keyboard_mapping or data
+    _data_to_map = keyboard_mapping or data  # Todo: keyboard_mapping is always True
     for item in _data_to_map:
         _map.update({item[0]: item[1]})
     return _map

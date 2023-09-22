@@ -1,7 +1,7 @@
 import dataclasses
 import threading
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
     from slodon.slodonix.slodonix.slodonix_windows import _Info
@@ -16,13 +16,14 @@ class SlodonixThread(threading.Thread):
     def __init__(self):
         super().__init__()
         self.listen_to = None
+        # control the execution of the thread.
         self.stop_event = threading.Event()
 
     def run(self):
         """
         trigger when "thread.start()" is called.
         """
-        while not self.stop_event.is_set():
+        while not self.stop_event.is_set():  # while the thread is not stopped
             self.listen_to()
 
 
@@ -46,7 +47,8 @@ class DetectMouse(SlodonixThread):
                 _method = getattr(
                     self.obj, self.method
                 )  # get the method based on the name
-                _method(curr_pos)  # position has been changed call with the new one
+                # position has been changed call with the new one
+                _method(curr_pos)
             prev_pos = curr_pos
 
 
@@ -56,20 +58,18 @@ class Listener:
     Handling threads.
     """
 
-    THREADS = []
+    THREADS: List[threading.Thread] = []
 
     def __init__(self, _instance: "_Info") -> None:
         super().__init__()
         self.info = _instance  # _Info() instance
 
-    def add_listener(
-        self, _type: str, method: callable, obj: "DisplayAsParent"
-    ) -> None:
+    def add_listener(self, _type: str, method: str, obj: "DisplayAsParent") -> None:
         """
         Start a thread to listen for a specific event type.
         ### Arguments:
               - _type (str): The type of event to listen for.
-              - method (callable): The method to call when the event is triggered.
+              - method (str): The method to call when the event is triggered.
               - obj: The object to call the method on.
         ### Returns:
            None
@@ -77,9 +77,10 @@ class Listener:
 
         match _type:
             case "mouse":  # In case of mouse event
-                movement_thread = DetectMouse(obj, method, self.info)
-                movement_thread.start()
-                self.THREADS.append(movement_thread)  # add the thread to the list
+                movement_thread = DetectMouse(obj, method, self.info)  # create a thread
+                movement_thread.start()  # start the thread
+                # add the thread to the list
+                self.THREADS.append(movement_thread)
             case "key_pressed":
                 pass
 

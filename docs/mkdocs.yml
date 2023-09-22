@@ -5,7 +5,6 @@ site_author: Hadhzy Org
 repo_name: Hadhzy/slodon
 repo_url: https://github.com/Hadhzy/slodon
 
-
 theme:
   name: material
   features:
@@ -39,28 +38,32 @@ theme:
     - search.suggest
     - toc.follow
   palette:
-  - media: '(prefers-color-scheme: light)'
-    scheme: default
-    primary: pink
-    accent: indigo
-    toggle:
-      icon: material/lightbulb
-      name: Switch to dark mode
-  - media: '(prefers-color-scheme: dark)'
-    scheme: slate
-    primary: black
-    accent: amber
-    toggle:
-      icon: material/lightbulb-outline
-      name: Switch to light mode
-
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: pink
+      accent: indigo
+      toggle:
+        icon: material/lightbulb
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: amber
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to light mode
 
 # Page tree
 nav:
   - Home: index.md
   - Getting started:
       - Installation: getting-started.md
-  - Slodonix: slodonix/home.md
+  - Slodonix:
+      - Introduction: slodonix/introduction.md
+      - Understanding how Slodonix works:
+          - Simple Working Example: slodonix/understanding-slodonix/working-example.md
+          - Structure of Slodonix:
+              - Folder Structure: slodonix/slodonix-structure/basic-structure.md
   - Model: model/home.md
   - API: API/home.md
   - SloScrap: SloScrap/home.md
@@ -78,6 +81,10 @@ nav:
       - Structure: fundementals/structure.md
     - Idea:
       - slodon's cycle: fundementals/eco-system.md
+      - hzy/introduction.md
+
+  - developer-guide: -developer-guide/developer-guide.md
+
 
 markdown_extensions:
   - pymdownx.highlight:
