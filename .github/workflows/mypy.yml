@@ -3,9 +3,9 @@ name: Mypy
 on: [push, pull_request]
 
 jobs:
-  build:
+  linux:
     runs-on: ubuntu-latest
-    name: Mypy
+    name: Mypy-linux
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python 3.11
@@ -17,4 +17,26 @@ jobs:
         pip install mypy
     - name: mypy
       run: |
-        mypy slodon/
+        mypy slodon/slodonix/slodonix/exceptions
+        mypy slodon/slodonix/systems/wayland
+        mypy slodon/slodonix/slodonix/slodonix_wayland.py
+        mypy slodon/slodonix/systems/x
+        mypy slodon/slodonix/slodonix/slodonix_x.py
+        mypy slodon/slodonix/slodonix/tween.py
+        
+    windows:
+      runs-on: windows-latest
+      name: Mypy-windows
+      steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+      - name: Install Dependencies
+        run: |
+          pip install mypy
+      - name: mypy
+        run: |
+          mypy slodon/slodonix/slodonix/systems/windows
+          mypy slodon/slodonix/slodonix_windows.py
