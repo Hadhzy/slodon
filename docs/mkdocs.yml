@@ -72,9 +72,19 @@ nav:
       - hadhzy-python-xlib/X-Concepts.md
       - hadhzy-python-xlib/user-guide.md
   - hzy:
+    - hzy/introduction.md
+    
+  - developer-guide: developer-guide/developer-guide.md
+  - Fundementals: 
+    - Introduction: fundementals/introduction.md
+    - Slodon's Structure:
+      - Structure: fundementals/structure.md
+    - Idea:
+      - slodon's cycle: fundementals/eco-system.md
       - hzy/introduction.md
 
   - developer-guide: -developer-guide/developer-guide.md
+
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -84,3 +94,4 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+
