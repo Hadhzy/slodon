@@ -24,7 +24,7 @@ jobs:
         mypy slodon/slodonix/slodonix/slodonix_x.py
         mypy slodon/slodonix/slodonix/tween.py
         
-    windows:
+  windows:
       runs-on: windows-latest
       name: Mypy-windows
       steps:
