@@ -21,7 +21,7 @@ jobs:
         mypy slodon/slodonix/systems/wayland --follow-imports silent
         mypy slodon/slodonix/slodonix/slodonix_linux_wayland.py --follow-imports silent
         mypy slodon/slodonix/systems/x --follow-imports silent
-        mypy slodon/slodonix/slodonix/slodonix_x.py --follow-imports silent
+        mypy slodon/slodonix/slodonix/slodonix_linux_x.py --follow-imports silent
         mypy slodon/slodonix/slodonix/tween.py --follow-imports silent
         
   windows:
