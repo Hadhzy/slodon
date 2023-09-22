@@ -82,7 +82,7 @@ This board includes the tasks and todos specifically realted to the [SloScrap]()
 - [`mkdocs-material`](https://squidfunk.github.io/mkdocs-material/) -> Empowers the documentation
 
 # How to help with ongoing features
-if you consider helping with ongoing tasks, and not neccessarily interested in proposing a [new feature](#propose-a-new-feature) the following might be useful.
+If you consider helping with ongoing tasks, and not neccessarily interested in proposing a [new feature](#propose-a-new-feature) the following might be useful.
 
 - Checking out our [project's board](https://github.com/orgs/Hadhzy/projects) should be the first thing, this is very essential and it will give an idea of what we are dong daily. 
 
