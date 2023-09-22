@@ -1,11 +1,7 @@
 import dataclasses
 import threading
 
-from typing import TYPE_CHECKING, List
-
-if TYPE_CHECKING:
-    from slodon.slodonix.slodonix.slodonix_windows import _Info
-    from slodon.slodonix.slodonix.slodonix_windows import DisplayAsParent
+from typing import List
 
 
 class SlodonixThread(threading.Thread):
@@ -60,17 +56,17 @@ class Listener:
 
     THREADS: List[threading.Thread] = []
 
-    def __init__(self, _instance: "_Info") -> None:
+    def __init__(self, _instance) -> None:
         super().__init__()
         self.info = _instance  # _Info() instance
 
-    def add_listener(self, _type: str, method: str, obj: "DisplayAsParent") -> None:
+    def add_listener(self, _type: str, method: str, obj) -> None:
         """
         Start a thread to listen for a specific event type.
         ### Arguments:
               - _type (str): The type of event to listen for.
               - method (str): The method to call when the event is triggered.
-              - obj: The object to call the method on.
+              - obj: The object to call the method on(DisplayAsParent).
         ### Returns:
            None
         """

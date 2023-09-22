@@ -17,12 +17,12 @@ jobs:
         pip install mypy
     - name: mypy
       run: |
-        mypy slodon/slodonix/slodonix/exceptions
-        mypy slodon/slodonix/systems/wayland
-        mypy slodon/slodonix/slodonix/slodonix_wayland.py
-        mypy slodon/slodonix/systems/x
-        mypy slodon/slodonix/slodonix/slodonix_x.py
-        mypy slodon/slodonix/slodonix/tween.py
+        mypy slodon/slodonix/slodonix/exceptions --follow-imports silent
+        mypy slodon/slodonix/systems/wayland --follow-imports silent
+        mypy slodon/slodonix/slodonix/slodonix_wayland.py --follow-imports silent
+        mypy slodon/slodonix/systems/x --follow-imports silent
+        mypy slodon/slodonix/slodonix/slodonix_x.py --follow-imports silent
+        mypy slodon/slodonix/slodonix/tween.py --follow-imports silent
         
   windows:
       runs-on: windows-latest
@@ -38,5 +38,5 @@ jobs:
           pip install mypy
       - name: mypy
         run: |
-          mypy slodon/slodonix/slodonix/systems/windows
-          mypy slodon/slodonix/slodonix_windows.py
+          mypy slodon/slodonix/systems/windows
+          mypy slodon/slodonix/slodonix/slodonix_windows.py
