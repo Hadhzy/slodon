@@ -76,7 +76,8 @@ nav:
     - Introduction: fundementals/introduction.md
     - Slodon's Structure:
       - Structure: fundementals/structure.md
-  
+    - Idea:
+      - slodon's cycle: fundementals/eco-system.md
 
 markdown_extensions:
   - pymdownx.highlight:

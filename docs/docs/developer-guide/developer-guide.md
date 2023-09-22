@@ -55,7 +55,7 @@ This board is for general todos and tasks, it is not specific to any package. Th
 [Slodonix](https://github.com/orgs/Hadhzy/projects/13):
 This board includes the tasks and todos specifically realted to the [Slodonix]() package. Furthermore the board includes issues that were opened for this subpackage, meaning that when the issue was created, the `Slodonix` label was included, this makes the issue show up here, so make sure to be aware of this. The issues are being organised to three columns depending on the status of the issue. 
 
-[SloSynth](https://github.com/orgs/Hadhzy/projects/15)
+[SloSynth](https://github.com/orgs/Hadhzy/projects/15):
 This board includes the tasks and todos specifically realted to the [SloSynth]() package. Furthermore the board includes issues that were opened for this subpackage. meaning that when the issue was created, the `SloSynth` label was included, this makes the issue show up here, so make sure to be aware of this. The issues are being organised to three columns depending on the status of the issue.
 
 [SloScrap](https://github.com/orgs/Hadhzy/projects/8):
@@ -73,6 +73,8 @@ This board includes the tasks and todos specifically realted to the [SloScrap]()
 - [hadhzy-python-xlib](https://pypi.org/project/hadhzy-python-xlib/)` -> Our fork of the python-xlib project, empowers the x display server.
 
 *[Dev requirements are](https://github.com/Hadhzy/slodon/blob/main/requirements-dev.txt)*:
+
+*These requirements are essential for contributing to the project(not part of the basic package)*
 
 - [`pylint`](https://pypi.org/project/pylint/) -> Empowers the linter
 - [`black`](https://pypi.org/project/black/) -> Empowers the formatter
@@ -96,16 +98,17 @@ In order to propose a new feature you have to follow a few rules:
 **To Propose a new feature to the project properly**:
     - Check out the [project's board](https://github.com/Hadhzy/slodon/projects?query=is%3Aopen) -> where you can see the outgoing tasks
     - Propose it in the [discord server](https://discord.gg/gaRuN8jC) -> At the moment, our community is based on the discord server, having a conversation about a proposal might be a the best idea before getting started. 
-    - Open a [new issue](https://github.com/Hadhzy/slodon/issues) -> According to famous and respected open source projects(cpython), the issue page is one of the best  place to tell us your proposal idea.
-    
+    - Open a [new issue](https://github.com/Hadhzy/slodon/issues) -> According to famous and respected open source projects, the issue page is one of the best places to tell us your proposal idea.
+    **The proposal must happen on the [issue](https://github.com/Hadhzy/slodon/issues) page.**
+
     Our Official Template for proposing a new feature:
     ```
-    Title: New feature proposal: Implementing ...
+    Title: New feature proposal: Implementing ... (name of the new feature)
     Description: A long description about the feature that you wish to propose.
     History: It is also necessary to include old issues or feature proposals which are similiar or have any level of correlation with your proposal.
-    Thread: If there is a thread already started discussing your idea please make sure to link that here.
-    Examples: Add examples to help us understand what you want to achieve, the more specific the better.
-    Technical Implemntation: This is where you describe how you are planning to implement this technically(make sure to link the relevant source code), this section also should contain some code snippets, or a pr.
+    Thread: If there is a thread already discussing your idea please make sure to link that here.
+    Examples: Add examples to help us understand what you want to achieve, the more specific the better(code snippets, showing the proposed feature).
+    Technical Implementation: This is where you describe how you are planning to implement this technically(make sure to link the relevant source code), this section also should contain some code snippets, or a pr.
     ```
 
 
@@ -113,7 +116,7 @@ In order to propose a new feature you have to follow a few rules:
 # Merging process
 Now you've got to the point where you have finished your work and you are ready to merge your work to the main branch. This is the most important part of the process, and it is very important to do it properly. We have certain requirements that you have to follow in order to merge your work to the main branch. These are the following:
 
-- Assuming that you have created a feature branch, you need to update your main branch first. Make sure to do that first before moving on.
+- Assuming that you have created a feature branch, you need to update your main branch first(on your fork). Make sure to do that first before moving on.
 - Secondly, Open a PR from your fork.
 - Once your PR has been opened, we require every one of our PRs to meet with the following requirements: 
     - The code needs to be formatted by [black](https://github.com/orgs/Hadhzy/projects/8), If not then the checking will fail, also make sure to format every single file because you may get errors related to this issue. 
