@@ -13,9 +13,9 @@ from slodon.slodonix.systems.x.keyboard_map import full_map as key_map
 from slodon.slodonix.systems.windows.constants import LEFT, MIDDLE, RIGHT
 from slodon.slodonix.systems.x.structures import Position, SIZE
 from slodon.slodonix.slodonix.tween import linear
-from slodon.slodonix.systems.windows.utils import slodonix_check
-from slodon.slodonix.systems.windows.utils import is_shift_character
-from slodon.slodonix.systems.windows.event import Listener
+from slodon.slodonix.systems.windows.utils import slodonix_check 
+from slodon.slodonix.systems.windows.utils import is_shift_character 
+from slodon.slodonix.systems.windows.event import Listener 
 
 X_TYPE = Union[int, float, None, tuple]
 Y_TYPE = Union[int, float, None]
